@@ -46,20 +46,19 @@ module ForemanTemplates
 
     def parse_files!
       result_lines = []
-
+      template_parser = TemplateParser.new { :force => @force }
+      parse_result = ParseResult.new
       # Build a list of ERB files to parse
       Dir["#{@dir}#{@dirname}/**/*.erb"].each do |template|
         text = File.read(template)
-        result_lines << 'Parsing: ' + template.gsub(/#{@dir}#{@dirname}/, '') if @verbose
+
+        parse_result.add 'Parsing: ' + template.gsub(/#{@dir}#{@dirname}/, ''), true
 
         metadata = parse_metadata(text)
         metadata['associate'] = @associate
 
-        # Get the name and filter
-        filename = template.split('/').last
-        title    = filename.split('.').first
-        name     = metadata['name'] || title
-        name     = auto_prefix(name)
+        name = parse_name template, metadata['name']
+
         if @filter
           matching = name.match(/#{@filter}/i)
           matching = !matching if @negate
@@ -68,19 +67,13 @@ module ForemanTemplates
 
         begin
           # Expects a return of { :diff, :status, :result, :errors }
-          data = if metadata['model'].present?
-                   metadata['model'].constantize.import!(name, text, metadata, @force)
-                 else
-                   # For backwards-compat before "model" metadata was added
-                   case metadata['kind']
-                   when 'ptable'
-                     Ptable.import!(name, text, metadata, @force)
-                   when 'job_template'
-                     # TODO: update REX templates to have `model` and delete this
+          data = if metadata['model'] == 'job_template'
+                    JobTemplate.import!(name, text, metadata, @force)
+                 elsif metadata['kind'] == 'job_template'
+                  # TODO: update REX templates to have `model` and delete this
                      update_job_template(name, text)
-                   else
-                     ProvisioningTemplate.import!(name, text, metadata, @force)
-                   end
+                 else
+                    template_parser.parse_template_file(parse_result, name, text, metadata)
                  end
 
           if data[:diff].nil? && data[:old].present? && data[:new].present?
@@ -111,18 +104,25 @@ module ForemanTemplates
       name.start_with?(@prefix) ? name : [@prefix, name].compact.join
     end
 
-    def calculate_diff(old, new)
-      if old != new
-        Diffy::Diff.new(old, new, :include_diff_info => true).to_s(:color)
-      else
-        nil
-      end
-    end
+    # def calculate_diff(old, new)
+    #   if old != new
+    #     Diffy::Diff.new(old, new, :include_diff_info => true).to_s(:color)
+    #   else
+    #     nil
+    #   end
+    # end
 
     def parse_metadata(text)
       # Pull out the first erb comment only - /m is for a multiline regex
       extracted = text.match(/<%\#[\t a-z0-9=:]*(.+?).-?%>/m)
       extracted.nil? ? {} : YAML.load(extracted[1])
+    end
+
+    def parse_name(template_file, from_metadata)
+      filename = template_file.split('/').last
+      title    = filename.split('.').first
+      name     = from_metadata || title
+      auto_prefix(name)
     end
 
     def update_job_template(name, text)
@@ -175,14 +175,14 @@ module ForemanTemplates
       bool_name.is_a?(String) ? bool_name != 'false' : bool_name
     end
 
-    def status_to_text(status, name)
-      msg = "#{name} - import "
-      msg << if status
-               "success"
-             else
-               'failure'
-             end
-      msg
-    end
+    # def status_to_text(status, name)
+    #   msg = "#{name} - import "
+    #   msg << if status
+    #            "success"
+    #          else
+    #            'failure'
+    #          end
+    #   msg
+    # end
   end
 end
