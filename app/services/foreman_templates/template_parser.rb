@@ -11,25 +11,23 @@ module ForemanTemplates
     def parse_snippet(parse_result, name, text)
       snippet = Template.where(:name => name).first_or_initialize
       if snippet.locked? && !snippet.new_record? && !@opts[:force]
-        parse_result.add_skip_locked name, snippet, 'snippet'
-        parse_result
+        parse_result.add_skip_locked snippet, 'snippet'
+        return parse_result
       end
 
+      # TODO: extract to a separate method
       if text != snippet.template
         parse_result.add_result_action snippet, 'snippet'
         parse_result.add_diff(snippet.template, text)
+
         snippet.ignore_locking do
           snippet.update_attributes({ :template => text, :snippet => true })
           parse_result.add_status_and_errors(snippet)
-          # parse_result.add_errors(snippet)
-          # parse_result.add_errors(snippet)
         end
-
       else
-        
+        parse_result.add_no_result_action snippet, 'snippet'
       end
-
-
+      parse_result
     end
 
     def calculate_diff(old, new)

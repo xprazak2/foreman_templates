@@ -30,8 +30,8 @@ module ForemanTemplates
       msg
     end
 
-    def skip_locked_msg(name, template, template_type_string)
-      "Skipping #{template_type_string} #{id_string template}:#{name} - template is locked"
+    def skip_locked_msg(template, template_type_string)
+      "Skipping #{template_type_string} #{id_string template}:#{template.name} - template is locked"
     end
 
     def add_diff(old, new)
@@ -42,8 +42,21 @@ module ForemanTemplates
       add template.errors, false unless template.errors.empty?
     end
 
+    def add_status(template)
+      add status_to_text(template.errors.empty?, template.name), false
+    end
+
+    def add_errors_and_status(template)
+      add_errors template
+      add_status template
+    end
+
     def add_result_action(template, template_type_string)
       add "  #{c_or_u_string(template)} #{template_type_string} #{id_string template}:#{template.name}", false
+    end
+
+    def add_no_result_action(template, template_type_string)
+      add "  No change to #{template_type_string} #{id_string template}:#{template.name}", false
     end
 
     def calculate_diff(old, new)
