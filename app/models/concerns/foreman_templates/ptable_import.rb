@@ -2,7 +2,35 @@ module ForemanTemplates
   module PtableImport
     extend ActiveSupport::Concern
 
+    def template_content_attr
+      :layout
+    end
+
+    def template_content_changed?(attrs_to_update)
+      self.send(template_content_attr) != attrs_to_update[template_content_attr]
+    end
+
     module ClassMethods
+      def attrs_to_import(metadata, template_text)
+        { :layout => text }
+      end
+
+      def metadata_associations(metadata)
+        {
+          :oses          => map_metadata(metadata, 'oses'),
+          :locations     => map_metadata(metadata, 'locations'),
+          :organizations => map_metadata(metadata, 'organizations')
+        }
+      end
+
+      def handle_association(associations, attrs_to_update)
+        attrs_to_update[:operatingsystem_ids] = associations[:oses].map(&:id)
+        attrs_to_update[:os_family]           = associations[:oses].map(&:family).uniq.first
+        attrs_to_update[:location_ids]        = associations[:locations].map(&:id)
+        attrs_to_update[:organization_ids]    = associations[:organizations].map(&:id)
+        attrs_to_update
+      end
+
       def import!(name, text, metadata, force = false)
         # Check for snippet type
         return import_snippet!(name, text, force) if metadata['snippet']

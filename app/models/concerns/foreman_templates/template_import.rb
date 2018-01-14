@@ -2,6 +2,10 @@ module ForemanTemplates
   module TemplateImport
     extend ActiveSupport::Concern
 
+    def associations_changed?(data)
+      !(data[:os_family] || data[:location_ids] || data[:organization_ids]).nil?
+    end
+
     module ClassMethods
       def import_snippet!(name, text, force = false)
         # Data

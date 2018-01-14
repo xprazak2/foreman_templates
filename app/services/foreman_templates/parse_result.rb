@@ -6,6 +6,7 @@ module ForemanTemplates
 
     def add(line, verbose)
       @result_lines << { :line => line, :verbose => verbose } unless line.empty?
+      self
     end
 
     def add_skip_locked(name, template, template_type_string)
@@ -38,8 +39,12 @@ module ForemanTemplates
       add get_diff(old, new), true
     end
 
-    def add_errors(template)
+    def add_errors_if_any(template)
       add template.errors, false unless template.errors.empty?
+    end
+
+    def add_errors(template)
+      add template.errors, false
     end
 
     def add_status(template)
@@ -57,6 +62,14 @@ module ForemanTemplates
 
     def add_no_result_action(template, template_type_string)
       add "  No change to #{template_type_string} #{id_string template}:#{template.name}", false
+    end
+
+    def add_import_errors(error, template)
+      add "  Skipping: '#{name}' - #{errors.message}", false
+    end
+
+    def add_name_error(name)
+      add "  Skipping: '#{name}' - Unknown template model in metadata[:model]"
     end
 
     def calculate_diff(old, new)

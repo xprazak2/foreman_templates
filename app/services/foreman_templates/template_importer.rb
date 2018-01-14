@@ -1,4 +1,4 @@
-class NoKindError < RuntimeError; end
+class TemplateImportError < RuntimeError; end
 class MissingKindError < RuntimeError; end
 
 module ForemanTemplates
@@ -45,7 +45,7 @@ module ForemanTemplates
     end
 
     def parse_files!
-      result_lines = []
+      parse_results = []
       template_parser = TemplateParser.new { :force => @force }
       parse_result = ParseResult.new
       # Build a list of ERB files to parse
@@ -54,20 +54,14 @@ module ForemanTemplates
 
         parse_result.add 'Parsing: ' + template.gsub(/#{@dir}#{@dirname}/, ''), true
 
-        metadata = parse_metadata(text)
-        metadata['associate'] = @associate
+        metadata = process_metadata(text)
 
         name = parse_name template, metadata['name']
 
-        if @filter
-          matching = name.match(/#{@filter}/i)
-          matching = !matching if @negate
-          next unless matching
-        end
+        next if @filter && !name_matching_filter?(name)
 
         begin
-          # Expects a return of { :diff, :status, :result, :errors }
-          data = if metadata['model'] == 'job_template'
+          parse_result = if metadata['model'] == 'job_template'
                     JobTemplate.import!(name, text, metadata, @force)
                  elsif metadata['kind'] == 'job_template'
                   # TODO: update REX templates to have `model` and delete this
@@ -75,47 +69,34 @@ module ForemanTemplates
                  else
                     template_parser.parse_template_file(parse_result, name, text, metadata)
                  end
-
-          if data[:diff].nil? && data[:old].present? && data[:new].present?
-            data[:diff] = calculate_diff(data[:old], data[:new])
-          end
-
-          if @verbose
-            result_lines << data[:result]
-            result_lines << data[:diff] unless data[:diff].nil?
-          end
-          result_lines << status_to_text(data[:status], name)
-          result_lines << data[:errors] unless data[:errors].empty?
-        rescue MissingKindError
-          result_lines << "  Skipping: '#{name}' - No template kind or model detected"
-          next
-        rescue NoKindError
-          result_lines << "  Skipping: '#{name}' - Unknown template kind '#{metadata['kind']}'"
-          next
-        rescue NameError
-          result_lines << "  Skipping: '#{name}' - Unknown template model '#{metadata['model']}'"
-          next
+        rescue TemplateImportError => e
+          parse_result.add_import_error e
+        ensure
+          parse_results << parse_result
         end
       end
-      result_lines
+      parse_results
     end
 
     def auto_prefix(name)
       name.start_with?(@prefix) ? name : [@prefix, name].compact.join
     end
 
-    # def calculate_diff(old, new)
-    #   if old != new
-    #     Diffy::Diff.new(old, new, :include_diff_info => true).to_s(:color)
-    #   else
-    #     nil
-    #   end
-    # end
+    def name_matching_filter?(name)
+      matching = name.match(/#{@filter}/i)
+      !matching if @negate
+    end
 
     def parse_metadata(text)
       # Pull out the first erb comment only - /m is for a multiline regex
       extracted = text.match(/<%\#[\t a-z0-9=:]*(.+?).-?%>/m)
       extracted.nil? ? {} : YAML.load(extracted[1])
+    end
+
+    def process_metadata(text)
+      metadata = parse_metadata(text)
+      metadata['associate'] = @associate
+      metadata
     end
 
     def parse_name(template_file, from_metadata)
