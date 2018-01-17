@@ -9,12 +9,28 @@ module ForemanTemplates
       self
     end
 
-    def add_skip_locked(name, template, template_type_string)
-      add skip_locked_msg(name, template, template_type_string), true
+    def to_s(verbose = false)
+      if verbose
+        map_lines.join("\n")
+      else
+        map_lines(non_verbose_messages).join("\n")
+      end
+    end
+
+    def map_lines(result_lines = @result_lines)
+      result_lines.map { |item| item[:line] }
+    end
+
+    def non_verbose_messages
+      @result_lines.select { |item| !item[:verbose] }
+    end
+
+    def add_skip_locked(template, metadata)
+      add skip_locked_msg(template, output_string(metadata)), true
     end
 
     def id_string(template)
-      template.new_record? ? '' : "id #{template.id}"
+      template.new_record? ? '' : " id #{template.id}"
     end
 
     def c_or_u_string(template)
@@ -31,12 +47,39 @@ module ForemanTemplates
       msg
     end
 
-    def skip_locked_msg(template, template_type_string)
-      "Skipping #{template_type_string} #{id_string template}:#{template.name} - template is locked"
+    def handle_import_messages(template, diff, attrs_to_update, associations)
+      add_status(template)
+      if template.errors.any?
+        add_errors template
+      else
+        add_generated_diff diff
+        add_associations_result template, associations
+      end
+      self
     end
 
-    def add_diff(old, new)
-      add get_diff(old, new), true
+    def add_associations_result(template, associations)
+      add build_associations_result(template, associations), true
+    end
+
+    def build_associations_result(template, associations)
+      res  = "  #{c_or_u_string template} Template#{id_string template}:#{template.name}"
+      associations.map do |key, values|
+        res += "\n    #{key.to_s.capitalize} Associations:\n    - #{values.map { |val| val.public_send template.association_output_method(key) }.join("\n    - ")}" unless values.empty?
+      end
+    end
+
+    def skip_locked_msg(template, template_type_string)
+      "Skipping #{template_type_string}#{id_string template}:#{template.name} - template is locked"
+    end
+
+    def output_string(metadata)
+      return 'snippet' if metadata['snippet'] || metadata['kind'] == 'snippet'
+      metadata['model']
+    end
+
+    def add_generated_diff(diff)
+      add diff, true
     end
 
     def add_errors_if_any(template)
@@ -44,24 +87,22 @@ module ForemanTemplates
     end
 
     def add_errors(template)
-      add template.errors, false
+      errors = template.errors.messages.map do |key, values|
+        "#{key}: #{values.join(', ')}"
+      end.join(', ')
+      add errors, false
     end
 
     def add_status(template)
       add status_to_text(template.errors.empty?, template.name), false
     end
 
-    def add_errors_and_status(template)
-      add_errors template
-      add_status template
+    def add_result_action(template, metadata)
+      add "  #{c_or_u_string(template)} #{output_string metadata}#{id_string template}: #{template.name}", false
     end
 
-    def add_result_action(template, template_type_string)
-      add "  #{c_or_u_string(template)} #{template_type_string} #{id_string template}:#{template.name}", false
-    end
-
-    def add_no_result_action(template, template_type_string)
-      add "  No change to #{template_type_string} #{id_string template}:#{template.name}", false
+    def add_no_change(template, metadata)
+      add "  No change to #{output_string metadata}#{id_string template}: #{template.name}", false
     end
 
     def add_import_errors(error, template)
@@ -72,16 +113,8 @@ module ForemanTemplates
       add "  Skipping: '#{name}' - Unknown template model in metadata[:model]"
     end
 
-    def calculate_diff(old, new)
-      if old != new
-        Diffy::Diff.new(old, new, :include_diff_info => true).to_s(:color)
-      else
-        nil
-      end
-    end
-
-    def get_diff(old, new)
-      Diffy::Diff.new(old, new, :include_diff_info => true).to_s(:color)
-    end
+    # def get_diff(old, new)
+    #   Diffy::Diff.new(old, new, :include_diff_info => true).to_s(:color)
+    # end
   end
 end

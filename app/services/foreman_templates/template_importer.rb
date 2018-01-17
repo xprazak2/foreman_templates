@@ -46,12 +46,12 @@ module ForemanTemplates
 
     def parse_files!
       parse_results = []
-      template_parser = TemplateParser.new { :force => @force }
-      parse_result = ParseResult.new
+      template_parser = TemplateParser.new(:force => @force)
       # Build a list of ERB files to parse
       Dir["#{@dir}#{@dirname}/**/*.erb"].each do |template|
         text = File.read(template)
 
+        parse_result = ParseResult.new
         parse_result.add 'Parsing: ' + template.gsub(/#{@dir}#{@dirname}/, ''), true
 
         metadata = process_metadata(text)
@@ -62,20 +62,17 @@ module ForemanTemplates
 
         begin
           parse_result = if metadata['model'] == 'job_template'
-                    JobTemplate.import!(name, text, metadata, @force)
-                 elsif metadata['kind'] == 'job_template'
-                  # TODO: update REX templates to have `model` and delete this
-                     update_job_template(name, text)
-                 else
-                    template_parser.parse_template_file(parse_result, name, text, metadata)
-                 end
-        rescue TemplateImportError => e
+                            JobTemplate.import!(name, text, metadata, @force)
+                         else
+                            template_parser.parse_template_file(parse_result, name, text, metadata)
+                         end
+       rescue TemplateImportError => e
           parse_result.add_import_error e
         ensure
           parse_results << parse_result
         end
       end
-      parse_results
+      parse_results.map(&:to_s)
     end
 
     def auto_prefix(name)
@@ -106,41 +103,6 @@ module ForemanTemplates
       auto_prefix(name)
     end
 
-    def update_job_template(name, text)
-      file = name.gsub(/^#{@prefix}/, '')
-      puts 'Deprecation warning: JobTemplate support is moving to the Remote Execution plugin'
-      puts "- please add 'model: JobTemplate' to the metadata in '#{file}' to call the right method"
-
-      unless defined?(JobTemplate)
-        return {
-          :status => false,
-          :result => 'Skipping job template import, remote execution plugin is not installed.'
-        }
-      end
-      template = JobTemplate.import(
-        text.sub(/^name: .*$/, "name: #{name}"),
-        :update => true
-      )
-
-      c_or_u = template.new_record? ? 'Created' : 'Updated'
-      begin
-        id_string = ('id' + template.id)
-      rescue StandardError
-        id_string = ''
-      end
-
-      if template.template != template.template_was
-        diff = Diffy::Diff.new(
-          template.template_was,
-          template.template,
-          :include_diff_info => true
-        ).to_s(:color)
-      end
-
-      result = "  #{c_or_u} Template #{id_string}:#{name}"
-      { :diff => diff, :status => template.save, :result => result }
-    end
-
     def purge!
       clause = "name #{@negate ? 'NOT ' : ''}LIKE ?"
       ProvisioningTemplate.where(clause, "#{@prefix}%").each do |template|
@@ -155,15 +117,5 @@ module ForemanTemplates
     def parse_bool(bool_name)
       bool_name.is_a?(String) ? bool_name != 'false' : bool_name
     end
-
-    # def status_to_text(status, name)
-    #   msg = "#{name} - import "
-    #   msg << if status
-    #            "success"
-    #          else
-    #            'failure'
-    #          end
-    #   msg
-    # end
   end
 end
