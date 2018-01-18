@@ -64,9 +64,10 @@ module ForemanTemplates
 
     def build_associations_result(template, associations)
       res  = "  #{c_or_u_string template} Template#{id_string template}:#{template.name}"
-      associations.map do |key, values|
+      associations.each do |key, values|
         res += "\n    #{key.to_s.capitalize} Associations:\n    - #{values.map { |val| val.public_send template.association_output_method(key) }.join("\n    - ")}" unless values.empty?
       end
+      res
     end
 
     def skip_locked_msg(template, template_type_string)
@@ -110,7 +111,14 @@ module ForemanTemplates
     end
 
     def add_name_error(name)
-      add "  Skipping: '#{name}' - Unknown template model in metadata[:model]"
+      add "  Skipping: '#{name}' - Unknown template model in metadata[:model]", false
+    end
+
+    def add_scope_error(name)
+      msg = "  Skipping: '#{name}' - Template with given name already exists in different scope and cannot be imported."
+      msg += " Change the name of template you are trying to import or fix the organizations/locations of the existing one, "
+      msg += "if you are trying to update it."
+      add msg, false
     end
 
     # def get_diff(old, new)

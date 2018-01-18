@@ -1,5 +1,4 @@
 class TemplateImportError < RuntimeError; end
-class MissingKindError < RuntimeError; end
 
 module ForemanTemplates
   class TemplateImporter < Action
@@ -61,8 +60,8 @@ module ForemanTemplates
         next if @filter && !name_matching_filter?(name)
 
         begin
-          parse_result = if metadata['model'] == 'job_template'
-                            JobTemplate.import!(name, text, metadata, @force)
+          parse_result = if metadata['model'] == 'JobTemplate'
+                            JobTemplate.import!(name, text, metadata, @force, parse_result)
                          else
                             template_parser.parse_template_file(parse_result, name, text, metadata)
                          end
@@ -72,7 +71,7 @@ module ForemanTemplates
           parse_results << parse_result
         end
       end
-      parse_results.map(&:to_s)
+      parse_results.map { |result| result.to_s(@verbose)}
     end
 
     def auto_prefix(name)
