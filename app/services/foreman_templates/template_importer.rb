@@ -60,14 +60,9 @@ module ForemanTemplates
         next if @filter && !name_matching_filter?(name)
 
         begin
-          parse_result = if metadata['model'] == 'JobTemplate'
-                            JobTemplate.import!(name, text, metadata, @force, parse_result)
-                         else
-                            template_parser.parse_template_file(parse_result, name, text, metadata)
-                         end
-       rescue TemplateImportError => e
+          parse_result = template_parser.parse_template_file(parse_result, name, text, metadata)
+        rescue TemplateImportError => e
           parse_result.add_import_error e
-        ensure
           parse_results << parse_result
         end
       end

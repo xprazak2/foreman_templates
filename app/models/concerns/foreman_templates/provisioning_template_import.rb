@@ -31,19 +31,11 @@ module ForemanTemplates
       end
 
       def metadata_associations(metadata)
-        {
-          :oses          => map_metadata(metadata, 'oses'),
-          :locations     => map_metadata(metadata, 'locations'),
-          :organizations => map_metadata(metadata, 'organizations')
-        }
+        super(metadata).merge(:oses => map_metadata(metadata, 'oses'))
       end
 
       def associations_update_attrs(associations)
-        {
-          :operatingsystem_ids => associations[:oses].map(&:id),
-          :location_ids        => associations[:locations].map(&:id),
-          :organization_ids    => associations[:organizations].map(&:id)
-        }
+        super(metadata).merge(:operatingsystem_ids => associations[:oses].map(&:id))
       end
     end
   end

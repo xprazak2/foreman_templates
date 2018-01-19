@@ -23,6 +23,8 @@ module ForemanTemplates
 
       attrs_to_update = collect_attrs_to_update template, metadata, template_text, model_name
 
+      template.build_new_associations(metadata)
+
       if template_changed?(attrs_to_update, template)
         parse_result.add_result_action template, metadata
         diff = calculate_diff(attrs_to_update, template)
@@ -41,8 +43,7 @@ module ForemanTemplates
     def collect_attrs_to_update(template, metadata, template_text, model_name)
       attrs_to_update = model_name.attrs_to_import metadata, template_text
       attrs_to_update = parse_if_snippet template, metadata, attrs_to_update
-      attrs_to_update = parse_associations template, metadata, attrs_to_update, model_name
-      template.build_new_associations(metadata).merge attrs_to_update
+      parse_associations template, metadata, attrs_to_update, model_name
     end
 
     def parse_associations(template, metadata, attrs_to_update, model_name)
@@ -57,7 +58,7 @@ module ForemanTemplates
     end
 
     def template_changed?(attrs_to_update, template)
-      template.template_changed?(template, attrs_to_update) || template.associations_changed?(attrs_to_update)
+      template.template_changed?(attrs_to_update) || template.associations_changed?(attrs_to_update)
     end
 
     def template_model(metadata)

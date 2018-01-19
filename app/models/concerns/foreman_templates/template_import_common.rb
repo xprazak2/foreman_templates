@@ -1,21 +1,37 @@
 module ForemanTemplates
   module TemplateImportCommon
     extend ActiveSupport::Concern
-    include Importable
 
     def associations_changed?(attrs_to_update)
       association_attrs.any? { |sym| !attrs_to_update[sym].empty? }
     end
 
-    def template_changed?(template, attrs_to_update)
-      template.template_content != attrs_to_update[template.template_content_attr]
+    def template_changed?(attrs_to_update)
+      template_content != attrs_to_update[template_content_attr]
+    end
+
+    def association_output_method(key)
+      { :organizations => :name, :location => :name }[key]
     end
 
     def build_new_associations(metadata)
-      {}
     end
 
     module ClassMethods
+      def metadata_associations(metadata)
+        {
+          :locations     => map_metadata(metadata, 'locations'),
+          :organizations => map_metadata(metadata, 'organizations')
+        }
+      end
+
+      def associations_update_attrs(associations)
+        {
+          :location_ids        => associations[:locations].map(&:id),
+          :organization_ids    => associations[:organizations].map(&:id)
+        }
+      end
+
       def map_metadata(metadata, param)
         if metadata[param]
           case param
