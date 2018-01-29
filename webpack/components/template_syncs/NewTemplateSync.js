@@ -1,10 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import * as TemplateSyncActions from '../actions/template_syncs'
+import * as TemplateSyncActions from '../../actions/template_sync';
 
 class NewTemplateSync extends React.Component {
     constructor(props) {
-        console.log(props);
         super(props);
     }
 
@@ -19,10 +18,9 @@ class NewTemplateSync extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    return {
-      importSettings: state.templateSync.importSettings || {},
-      exportSettings: state.templateSync.exportSettings || {}
-    };
+    // console.log(state);
+    // console.log(ownProps);
+    return {};
 };
 
 export default connect(mapStateToProps, TemplateSyncActions)(NewTemplateSync);

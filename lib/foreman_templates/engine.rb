@@ -33,8 +33,7 @@ module ForemanTemplates
               url_hash: { controller: :template_syncs, action: :new },
               caption: N_('Sync Templates'),
               parent: :hosts_menu,
-              after: :job_templates
-
+              before: :partition_tables
       end
     end
 

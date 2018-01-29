@@ -1,6 +1,8 @@
 <% title _("Sync Templates") %>
 
+<%= webpacked_plugins_js_for :foreman_templates %>
+
 <div id="new-template-sync">
 <%= mount_react_component('NewTemplateSync', '#new-template-sync', { :url => 'whatever',
-                                                                     :importSettingsUrl => import_settings_template_syncs,
-                                                                     :exportSettingsUrl => export_settings_template_syncs }.to_json )%>
+                                                                     :importSettingsUrl => import_settings_template_syncs_path,
+                                                                     :exportSettingsUrl => export_settings_template_syncs_path }.to_json )%>
