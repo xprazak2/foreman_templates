@@ -2,17 +2,15 @@ class TemplateSyncsController < ApplicationController
   def new
   end
 
-  def import_settings
-    render :json => { :msg => 'import settings' }
-  end
-
-  def export_settings
-    render :json => { :msg => 'export settings' }
+  def sync_settings
+    import_settings = Setting.where :name => Setting::TemplateSync.import_setting_names
+    export_settings = Setting.where :name => Setting::TemplateSync.export_setting_names
+    render :json => { :results => { :import => import_settings, :export => export_settings } }
   end
 
   def action_permission
     case params[:action]
-    when 'list'
+    when 'sync_settings'
       :view
     else
       super

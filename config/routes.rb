@@ -1,8 +1,7 @@
 Rails.application.routes.draw do
   resources :template_syncs, :only => [:new] do
     collection do
-      get 'import_settings'
-      get 'export_settings'
+      get 'sync_settings'
     end
   end
 

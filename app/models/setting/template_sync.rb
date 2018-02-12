@@ -1,5 +1,29 @@
 class Setting
   class TemplateSync < ::Setting
+    def self.common_stripped_names
+      %w(verbose repo branch dir filter negate)
+    end
+
+    def self.import_stripped_names
+      %w(prefix associate force)
+    end
+
+    def self.export_stripped_names
+      %w(metadata_export_mode)
+    end
+
+    def self.import_setting_names
+      map_prefix(common_stripped_names + import_stripped_names)
+    end
+
+    def self.export_setting_names
+      map_prefix(common_stripped_names + export_stripped_names)
+    end
+
+    def self.map_prefix(stripped_names)
+      stripped_names.map { |item| "template_sync_#{item}" }
+    end
+
     def self.associate_types
       {
         'always' => _('Always'),
