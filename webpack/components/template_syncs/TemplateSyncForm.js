@@ -19,6 +19,13 @@ class TemplateSyncForm extends React.Component {
   constructor(props) {
     super(props);
   }
+
+  getInitialState() {
+    return {
+      importType: ''
+    };
+  }
+
   showImportForm() {
     console.log('showing import form')
   }
@@ -28,30 +35,30 @@ class TemplateSyncForm extends React.Component {
   }
 
   radioButtons() {
+    const changeImportType = (event) => {
+      console.log(`Changing import type to ${event.target.value}`);
+      this.setState({ importType: event.target.value });
+      console.log(this.state);
+    }
+
     return [
-      { label: 'Import', checked: false, value: "import", onChange: () => console.log('Import on change') },
-      { label: 'Export', checked: false, value: "export", onChange: () => console.log('Emport on change') }
+      { label: 'Import', checked: false, value: "import", onChange: changeImportType },
+      { label: 'Export', checked: false, value: "export", onChange: changeImportType }
     ]
   }
 
   render() {
     console.log('Form props: ', this.props);
-    const { submitting, error, handleSubmit } = this.props;
+    const { submitting, error, handleSubmit, importSettings, exportSettings } = this.props;
     return(
       <div>
-        <div>Hello! I am a form</div>
         <Form onSubmit={handleSubmit(submit)} disabled={submitting} submitting={submitting} error={error}>
           <RadioButtonGroup name="syncType" controlLabel="Action type" radios={this.radioButtons()}></RadioButtonGroup>
+          <SyncSettingFields importType={this.state.importType} importSettings={importSettings} exportSettings={exportSettings}></SyncSettingFields>
         </Form>
       </div>
     );
   }
-}
-
-const mp = (args) => {
-  console.log('logging args')
-  console.log(args)
-  return { fake: true }
 }
 
 const form = reduxForm({ form: 'newTemplateSync' })(TemplateSyncForm);
