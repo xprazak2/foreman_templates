@@ -1,5 +1,7 @@
 class Setting
   class TemplateSync < ::Setting
+    self.include_root_in_json = false
+
     def self.common_stripped_names
       %w(verbose repo branch dir filter negate)
     end

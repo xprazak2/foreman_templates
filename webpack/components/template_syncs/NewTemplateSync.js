@@ -9,27 +9,28 @@ class NewTemplateSync extends React.Component {
     }
 
     componentDidMount() {
-        console.log('component did mount: ', this.props);
-        const { data: { importUrl, exportUrl, syncSettingsUrl }, getSyncSettings } = this.props;
+        // console.log('component did mount: ', this.props);
+        const { data: { syncSettingsUrl }, getSyncSettings } = this.props;
         getSyncSettings(syncSettingsUrl);
     }
 
     render() {
-
-      const { data: { importUrl, exportUrl } } = this.props;
+      const { data: { importUrl, exportUrl }, importSettings, exportSettings } = this.props;
 
       return (<div>
                 <div>I am Template Sync New component!</div>
-                <div><TemplateSyncForm syncSettings={syncSettings} importUrl={importUrl} exportUrl={exportUrl} ></TemplateSyncForm></div>
+                <div><TemplateSyncForm importSettings={importSettings} exportSettings={exportSettings} importUrl={importUrl} exportUrl={exportUrl} ></TemplateSyncForm></div>
               </div>);
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = ({ foreman_templates: { importSettings, exportSettings } }, ownProps) => {
+    // console.log('mapping state to props');
     // console.log(state);
     // console.log(ownProps);
     return {
-        syncSettings: state.syncSettings || []
+        importSettings: importSettings || {},
+        exportSettings: exportSettings || {}
     };
 };
 

@@ -13,18 +13,17 @@ const initialState = Immutable({});
 const syncTemplates = (state = initialState, action) => {
   const { payload } = action;
 
-  const stopLoading = () =>
+  const stopLoading = (state) =>
     state.set('loadingSettings', false);
 
   switch(action.type) {
     case SYNC_SETTINGS_REQUEST:
       return state.set('loadingSettings', true);
     case SYNC_SETTINGS_SUCCESS:
-      stopLoading();
-      return state.set('syncSettings', payload.results);
+      console.log(payload.results)
+      return stopLoading(state.set('importSettings', Immutable(payload.results.import)).set('exportSettings', Immutable(payload.results.export)));
     case SYNC_SETTINGS_FAILURE:
-      stopLoading();
-      return state.set('error', payload.error);
+      return stopLoading(state.set('error', payload.error));
     default:
       return state;
   }
