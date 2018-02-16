@@ -3,6 +3,9 @@ import { connect } from 'react-redux';
 import * as TemplateSyncActions from '../../actions/template_sync';
 import TemplateSyncForm from './TemplateSyncForm';
 
+import { Spinner } from 'patternfly-react';
+
+
 class NewTemplateSync extends React.Component {
     constructor(props) {
         super(props);
@@ -15,23 +18,28 @@ class NewTemplateSync extends React.Component {
     }
 
     render() {
-      const { data: { importUrl, exportUrl }, importSettings, exportSettings } = this.props;
-
+      const { data: { importUrl, exportUrl }, importSettings, exportSettings, loadingSettings } = this.props;
+      console.log(`Loading settings: ${loadingSettings}`)
+      console.log()
       return (<div>
                 <div>I am Template Sync New component!</div>
-                <div><TemplateSyncForm importSettings={importSettings} exportSettings={exportSettings} importUrl={importUrl} exportUrl={exportUrl} ></TemplateSyncForm></div>
+                <Spinner loading={loadingSettings}>
+                    <TemplateSyncForm importSettings={importSettings} exportSettings={exportSettings} importUrl={importUrl} exportUrl={exportUrl} ></TemplateSyncForm>
+                </Spinner>
               </div>);
     }
 }
 
-const mapStateToProps = ({ foreman_templates: { importSettings, exportSettings } }, ownProps) => {
+const mapStateToProps = ({ foreman_templates: { syncSettings } }, ownProps) => {
     // console.log('mapping state to props');
     // console.log(state);
     // console.log(ownProps);
-    return {
-        importSettings: importSettings || {},
-        exportSettings: exportSettings || {}
-    };
+    // return {
+    //     importSettings: importSettings || [],
+    //     exportSettings: exportSettings || [],
+    //     loadingSettings: loadingSettings || true
+    // };
+    return syncSettings
 };
 
 export default connect(mapStateToProps, TemplateSyncActions)(NewTemplateSync);

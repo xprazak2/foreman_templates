@@ -20,12 +20,6 @@ class TemplateSyncForm extends React.Component {
     super(props);
   }
 
-  getInitialState() {
-    return {
-      importType: ''
-    };
-  }
-
   showImportForm() {
     console.log('showing import form')
   }
@@ -48,13 +42,13 @@ class TemplateSyncForm extends React.Component {
   }
 
   render() {
-    console.log('Form props: ', this.props);
+    // console.log('Form props: ', this.props);
     const { submitting, error, handleSubmit, importSettings, exportSettings } = this.props;
     return(
       <div>
         <Form onSubmit={handleSubmit(submit)} disabled={submitting} submitting={submitting} error={error}>
           <RadioButtonGroup name="syncType" controlLabel="Action type" radios={this.radioButtons()}></RadioButtonGroup>
-          <SyncSettingFields importType={this.state.importType} importSettings={importSettings} exportSettings={exportSettings}></SyncSettingFields>
+
         </Form>
       </div>
     );
