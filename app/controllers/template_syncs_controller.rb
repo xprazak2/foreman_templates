@@ -1,3 +1,5 @@
+require 'ostruct'
+
 class TemplateSyncsController < ApplicationController
   def new
   end
@@ -5,7 +7,7 @@ class TemplateSyncsController < ApplicationController
   def sync_settings
     import_settings = Setting.where :name => Setting::TemplateSync.import_setting_names
     export_settings = Setting.where :name => Setting::TemplateSync.export_setting_names
-    render :json => { :results => { :import => import_settings, :export => export_settings } }
+    @results = OpenStruct.new(:import => import_settings, :export => export_settings)
   end
 
   def action_permission

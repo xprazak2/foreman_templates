@@ -42,6 +42,12 @@ class Setting
       }
     end
 
+    def selection
+      selection_method = name.split('template_sync_').last.concat('_types')
+      return self.class.public_send(selection_method) if self.class.respond_to?(selection_method)
+      {}
+    end
+
     def self.load_defaults
       return unless super
 

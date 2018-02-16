@@ -48,7 +48,6 @@ class TemplateSyncForm extends React.Component {
       <div>
         <Form onSubmit={handleSubmit(submit)} disabled={submitting} submitting={submitting} error={error}>
           <RadioButtonGroup name="syncType" controlLabel="Action type" radios={this.radioButtons()}></RadioButtonGroup>
-
         </Form>
       </div>
     );
