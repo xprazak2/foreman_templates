@@ -47,7 +47,6 @@ class TemplateSyncForm extends React.Component {
   }
 
   render() {
-    // console.log('Form props: ', this.props);
     const { submitting, error, handleSubmit, importSettings, exportSettings, syncType } = this.props;
     return(
       <div>
@@ -62,7 +61,11 @@ class TemplateSyncForm extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const syncType = formValueSelector(formName)(state, 'syncType');
-  return { syncType };
+  if ((!ownProps.importSettings && !ownProps.exportSettings && !syncType) || (ownProps.importSettings && ownProps.exportSettings && syncType)) {
+    return ({ syncType });
+  } else {
+    return ({ syncType: "import" });
+  }
 }
 
 const form = reduxForm({ form: formName })(TemplateSyncForm);
