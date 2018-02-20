@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { TextField } form 'foremanReact/components/common/forms/TextField';
+import TextField from 'foremanReact/components/common/forms/TextField';
 
-const SyncSettingsFields = ({ importSettings, exportSettings, importType }) => {
+const SyncSettingsFields = ({ importSettings, exportSettings, syncType }) => {
   const mapSettings = (settingsAry) =>
     (
       <div>
@@ -10,13 +10,15 @@ const SyncSettingsFields = ({ importSettings, exportSettings, importType }) => {
       </div>
     )
 
-  if (importType === "import") {
+  if (syncType === "import") {
     return mapSettings(importSettings);
   }
 
-  if (importType === "export") {
+  if (syncType === "export") {
     return mapSettings(exportSettings);
   }
 
   return(<div>No Settings found!</div>);
 }
+
+export default SyncSettingsFields;

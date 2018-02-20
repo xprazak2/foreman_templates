@@ -1,10 +1,14 @@
 import React from 'react';
-import { reduxForm } from 'redux-form';
+import { reduxForm, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
 
 import Form from 'foremanReact/components/common/forms/Form';
 import RadioButtonGroup from 'foremanReact/components/common/forms/RadioButtonGroup';
 import * as FormActions from 'foremanReact/redux/actions/common/forms';
+
+import SyncSettingsFields from './SyncSettingsFields';
+
+const formName = 'newTemplateSync';
 
 const submit = (whatever, dispatch, props) => {
   const { submitForm } = props;
@@ -28,31 +32,38 @@ class TemplateSyncForm extends React.Component {
     console.log('show export form')
   }
 
-  radioButtons() {
-    const changeImportType = (event) => {
-      console.log(`Changing import type to ${event.target.value}`);
-      this.setState({ importType: event.target.value });
-      console.log(this.state);
+  radioButtons(syncType) {
+    const changeSyncType = (event) => {
+      console.log(`Changing sync type to ${event.target.value}`);
+      this.setState({ syncType: event.target.value });
     }
 
+    const checked = (value, syncType) => value === syncType;
+
     return [
-      { label: 'Import', checked: false, value: "import", onChange: changeImportType },
-      { label: 'Export', checked: false, value: "export", onChange: changeImportType }
+      { label: 'Import', checked: checked("import", syncType), value: "import", onChange: changeSyncType },
+      { label: 'Export', checked: checked("export", syncType), value: "export", onChange: changeSyncType }
     ]
   }
 
   render() {
     // console.log('Form props: ', this.props);
-    const { submitting, error, handleSubmit, importSettings, exportSettings } = this.props;
+    const { submitting, error, handleSubmit, importSettings, exportSettings, syncType } = this.props;
     return(
       <div>
         <Form onSubmit={handleSubmit(submit)} disabled={submitting} submitting={submitting} error={error}>
-          <RadioButtonGroup name="syncType" controlLabel="Action type" radios={this.radioButtons()}></RadioButtonGroup>
+          <RadioButtonGroup name="syncType" controlLabel="Action type" radios={this.radioButtons(syncType)}></RadioButtonGroup>
+          <SyncSettingsFields importSettings={importSettings} exportSettings={exportSettings} syncType={syncType}></SyncSettingsFields>
         </Form>
       </div>
     );
   }
 }
 
-const form = reduxForm({ form: 'newTemplateSync' })(TemplateSyncForm);
-export default connect(null, FormActions)(form);
+const mapStateToProps = (state, ownProps) => {
+  const syncType = formValueSelector(formName)(state, 'syncType');
+  return { syncType };
+}
+
+const form = reduxForm({ form: formName })(TemplateSyncForm);
+export default connect(mapStateToProps, FormActions)(form);
