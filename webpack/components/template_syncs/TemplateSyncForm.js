@@ -1,6 +1,7 @@
 import React from 'react';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
+import { concat, reduce } from 'lodash';
 
 import Form from 'foremanReact/components/common/forms/Form';
 import RadioButtonGroup from 'foremanReact/components/common/forms/RadioButtonGroup';
@@ -59,12 +60,21 @@ class TemplateSyncForm extends React.Component {
   }
 }
 
+const prepareInitialValues = (importSettings, exportSettings) =>
+  (!importSettings || !exportSettings)
+    ? ({})
+    : reduce(concat(importSettings, exportSettings),
+             (memo, item) => Object.assign(memo, { [item.name]: item.value }),
+             {});
+
 const mapStateToProps = (state, ownProps) => {
   const syncType = formValueSelector(formName)(state, 'syncType');
+  const initialValues = prepareInitialValues(ownProps.importSettings, ownProps.exportSettings);
+
   if ((!ownProps.importSettings && !ownProps.exportSettings && !syncType) || (ownProps.importSettings && ownProps.exportSettings && syncType)) {
-    return ({ syncType });
+    return Object.assign({ syncType }, { initialValues });
   } else {
-    return ({ syncType: "import" });
+    return Object.assign({ syncType: "import" }, { initialValues });
   }
 }
 

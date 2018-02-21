@@ -6,10 +6,11 @@ const SyncSettingsFields = ({ importSettings, exportSettings, syncType }) => {
   const mapSettings = (settingsAry) =>
     (
       <div>
-        {settingsAry.map((item, index) => <TextField name={item.name}
-                                                     label={`${item.full_name} `}
-                                                     tooltipText={item.description}
-                                                     iconType="info">{item.value}</TextField>)}
+        {settingsAry.map((setting, index) => <TextField key={setting.name}
+                                                        name={setting.name}
+                                                        label={`${setting.full_name} `}
+                                                        tooltipText={setting.description}
+                                                        iconType="info">{setting.value}</TextField>)}
       </div>
     )
 
