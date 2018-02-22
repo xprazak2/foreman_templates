@@ -1,17 +1,18 @@
 import React from 'react';
 
-import textField from 'foremanReact/components/common/forms/TextField';
+import TextField from 'foremanReact/components/common/forms/TextField';
 import Button from 'foremanReact/components/common/forms/Button';
 
-const SyncSettingField = (setting) => {
-
+const SyncSettingField = ({ setting }) => {
+  const button = (<Button className="btn btn-default">Click me!</Button>);
+  // console.log(button);
   return (
-    <div>
       <TextField name={setting.name}
                  label={`${setting.full_name} `}
                  tooltipText={setting.description}
-                 iconType="info">{setting.value}</TextField>
-      <Button className="button-default">Click me!</Button>
-    </div>
+                 iconType="info"
+                 button={button}>{setting.value}</TextField>
   )
-}
+};
+
+export default SyncSettingField;

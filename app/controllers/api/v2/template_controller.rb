@@ -13,18 +13,19 @@ module Api
       param :force, :bool, :required => false, :desc => N_("Update templates that are locked")
 
       def import
-        results = ForemanTemplates::TemplateImporter.new({
-          verbose:   params['verbose'],
-          repo:      params['repo'],
-          branch:    params['branch'],
-          prefix:    params['prefix'],
-          dirname:   params['dirname'],
-          filter:    params['filter'],
-          associate: params['associate'],
-          negate:    params['negate'],
-          force:     params['force']
-        }).import!
-        render :json => { :message => results }
+        # results = ForemanTemplates::TemplateImporter.new({
+        #   verbose:   params['verbose'],
+        #   repo:      params['repo'],
+        #   branch:    params['branch'],
+        #   prefix:    params['prefix'],
+        #   dirname:   params['dirname'],
+        #   filter:    params['filter'],
+        #   associate: params['associate'],
+        #   negate:    params['negate'],
+        #   force:     params['force']
+        # }).import!
+        # render :json => { :message => results }
+        render :json => { :message => "imported" }
       end
 
       api :POST, "/template/export", N_("Initiate Export")
@@ -36,16 +37,17 @@ module Api
       param :metadata_export_mode, Setting::TemplateSync.metadata_export_mode_types.keys, :required => false, :desc => N_("Specify how to handle metadata")
       param :dir, String, :required => false, :desc => N_("The directory within Git repo")
       def export
-        ForemanTemplates::TemplateExporter.new({
-          verbose:              params['verbose'],
-          repo:                 params['repo'],
-          branch:               params['branch'],
-          filter:               params['filter'],
-          negate:               params['negate'],
-          metadata_export_mode: params['metadata_export_mode'],
-          dir:                  params['dir']
-        }).export!
-        render :json => { :message => _('Success') }
+        # ForemanTemplates::TemplateExporter.new({
+        #   verbose:              params['verbose'],
+        #   repo:                 params['repo'],
+        #   branch:               params['branch'],
+        #   filter:               params['filter'],
+        #   negate:               params['negate'],
+        #   metadata_export_mode: params['metadata_export_mode'],
+        #   dir:                  params['dir']
+        # }).export!
+        # render :json => { :message => _('Success') }
+        render :json => { :message => _('exported') }
       rescue StandardError => e
         logger.debug e
         render :json => { :message => (_('Something went wrong during export: %s') % e.message) }, :status => 500

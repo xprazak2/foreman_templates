@@ -11,18 +11,21 @@ import SyncSettingsFields from './SyncSettingsFields';
 
 const formName = 'newTemplateSync';
 
-const submit = (whatever, dispatch, props) => {
-  const { submitForm } = props;
+const submit = (values, dispatch, props) => {
+  const { submitForm, syncType, importUrl, exportUrl } = props;
   console.log('submitting form, props:');
   console.log(props);
   console.log('form values')
   console.log(whatever);
+  const url = syncType === 'import' ? importUrl : exportUrl;
+  return submitForm({ url, values, item: 'TemplateSync' })
 }
 
 class TemplateSyncForm extends React.Component {
 
   constructor(props) {
     super(props);
+    console.log(props)
   }
 
   showImportForm() {

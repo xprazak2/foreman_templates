@@ -21,7 +21,7 @@ class NewTemplateSync extends React.Component {
       const { data: { importUrl, exportUrl }, importSettings, exportSettings, loadingSettings } = this.props;
       return (<div>
                 <Spinner loading={loadingSettings}>
-                    <TemplateSyncForm importSettings={importSettings} exportSettings={exportSettings} importUrl={importUrl} exportUrl={exportUrl} ></TemplateSyncForm>
+                  <TemplateSyncForm importSettings={importSettings} exportSettings={exportSettings} importUrl={importUrl} exportUrl={exportUrl} ></TemplateSyncForm>
                 </Spinner>
               </div>);
     }
