@@ -15,8 +15,6 @@ const submit = (values, dispatch, props) => {
   const { submitForm, syncType, importUrl, exportUrl } = props;
   console.log('submitting form, props:');
   console.log(props);
-  console.log('form values')
-  console.log(whatever);
   const url = syncType === 'import' ? importUrl : exportUrl;
   return submitForm({ url, values, item: 'TemplateSync' })
 }
