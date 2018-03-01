@@ -1,7 +1,7 @@
 import React from 'react';
-import { reduxForm, formValueSelector } from 'redux-form';
+import { reduxForm, formValueSelector, change } from 'redux-form';
 import { connect } from 'react-redux';
-import { concat, reduce } from 'lodash';
+import { concat, curry, reduce } from 'lodash';
 
 import Form from 'foremanReact/components/common/forms/Form';
 import RadioButtonGroup from 'foremanReact/components/common/forms/RadioButtonGroup';
@@ -49,12 +49,19 @@ class TemplateSyncForm extends React.Component {
   }
 
   render() {
-    const { submitting, error, handleSubmit, importSettings, exportSettings, syncType } = this.props;
+    const { submitting, error, handleSubmit, importSettings, exportSettings, syncType, dispatch } = this.props;
+    console.log('Form Props')
+    console.log(this.props);
+
+    const resetToDefault = curry((dispatch, change, formName, fieldName, value) => {
+      dispatch(change(formName, fieldName, value));
+    })(dispatch, change, formName);
+
     return(
       <div>
         <Form onSubmit={handleSubmit(submit)} disabled={submitting} submitting={submitting} error={error}>
           <RadioButtonGroup name="syncType" controlLabel="Action type" radios={this.radioButtons(syncType)}></RadioButtonGroup>
-          <SyncSettingsFields importSettings={importSettings} exportSettings={exportSettings} syncType={syncType}></SyncSettingsFields>
+          <SyncSettingsFields importSettings={importSettings} exportSettings={exportSettings} syncType={syncType} resetField={resetToDefault} ></SyncSettingsFields>
         </Form>
       </div>
     );

@@ -16,6 +16,7 @@ const SyncSettingField = ({ setting }) => {
                        label={`${setting.full_name} `}
                        blank={{}}
                        item={setting}
+                       buttonText="Use Default Value"
                        >{setting.value}</TextButtonField>
   )
 };
