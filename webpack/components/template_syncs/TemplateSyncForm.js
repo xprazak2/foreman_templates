@@ -43,8 +43,8 @@ class TemplateSyncForm extends React.Component {
     const checked = (value, syncType) => value === syncType;
 
     return [
-      { label: 'Import', checked: checked("import", syncType), value: "import", onChange: changeSyncType },
-      { label: 'Export', checked: checked("export", syncType), value: "export", onChange: changeSyncType }
+      { label: 'Import', checked: checked("import", syncType), value: "import" },
+      { label: 'Export', checked: checked("export", syncType), value: "export" }
     ]
   }
 

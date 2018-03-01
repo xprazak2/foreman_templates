@@ -44,8 +44,8 @@ class Setting
 
     def selection
       selection_method = name.split('template_sync_').last.concat('_types')
-      return self.class.public_send(selection_method) if self.class.respond_to?(selection_method)
-      {}
+      return self.class.public_send(selection_method).map { |key, translated| { :value => key, :label => translated} } if self.class.respond_to?(selection_method)
+      []
     end
 
     def self.load_defaults
