@@ -10,7 +10,7 @@ const SyncSettingField = ({ setting, resetField }) => {
 
   const fieldSelector = (setting) => {
     if (setting.settings_type === 'boolean') {
-      return "bool";
+      return "checkbox";
     }
 
     if (setting.selection.length !== 0) {
@@ -21,12 +21,11 @@ const SyncSettingField = ({ setting, resetField }) => {
   }
 
   const handleReset = (setting_name, setting_value) => {
-    console.log("setting value")
-    console.log(setting_value)
+    // console.log("setting value")
+    // console.log(setting_value)
     resetField(setting_name, setting_value)
   }
 
-  // console.log(fieldType(setting));
   return (
       // <TextField name={setting.name}
       //            label={`${setting.full_name} `}>{setting.value}</TextField>
@@ -34,8 +33,8 @@ const SyncSettingField = ({ setting, resetField }) => {
                        label={`${setting.full_name} `}
                        blank={{}}
                        item={setting}
-                       buttonText="Use Default"
-                       buttonAction={() => handleReset(setting.name, setting.value)}
+                       buttonAttrs={ { buttonText: "Use Default",
+                                       buttonAction: () => handleReset(setting.name, setting.value) } }
                        fieldSelector={fieldSelector}
                        >{setting.value}</TextButtonField>
   )

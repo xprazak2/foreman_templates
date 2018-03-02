@@ -61,7 +61,6 @@ class TemplateSyncForm extends React.Component {
     return(
       <div>
         <Form onSubmit={handleSubmit(submit)} disabled={submitting} submitting={submitting} error={error}>
-          <TextField name="publik" type="checkbox" label={__('Public')} />
           <RadioButtonGroup name="syncType" controlLabel="Action type" radios={this.radioButtons(syncType)}></RadioButtonGroup>
           <SyncSettingsFields importSettings={importSettings} exportSettings={exportSettings} syncType={syncType} resetField={resetToDefault} ></SyncSettingsFields>
         </Form>

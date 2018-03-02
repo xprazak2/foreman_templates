@@ -1,6 +1,6 @@
 import React from 'react';
 
-// import TextField from 'foremanReact/components/common/forms/TextField';
+import TextField from 'foremanReact/components/common/forms/TextField';
 import SyncSettingField from './SyncSettingField';
 
 const SyncSettingsFields = ({ importSettings, exportSettings, syncType, resetField }) => {
@@ -19,6 +19,7 @@ const SyncSettingsFields = ({ importSettings, exportSettings, syncType, resetFie
     return mapSettings(exportSettings);
   }
 
+  // TODO: Error msg
   return(<div>No Settings found! This should never ever happen.</div>);
 }
 
