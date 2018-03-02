@@ -6,6 +6,7 @@ import { concat, curry, reduce } from 'lodash';
 import Form from 'foremanReact/components/common/forms/Form';
 import RadioButtonGroup from 'foremanReact/components/common/forms/RadioButtonGroup';
 import * as FormActions from 'foremanReact/redux/actions/common/forms';
+import TextField from 'foremanReact/components/common/forms/TextField';
 
 import SyncSettingsFields from './SyncSettingsFields';
 
@@ -60,6 +61,7 @@ class TemplateSyncForm extends React.Component {
     return(
       <div>
         <Form onSubmit={handleSubmit(submit)} disabled={submitting} submitting={submitting} error={error}>
+          <TextField name="publik" type="checkbox" label={__('Public')} />
           <RadioButtonGroup name="syncType" controlLabel="Action type" radios={this.radioButtons(syncType)}></RadioButtonGroup>
           <SyncSettingsFields importSettings={importSettings} exportSettings={exportSettings} syncType={syncType} resetField={resetToDefault} ></SyncSettingsFields>
         </Form>
@@ -79,9 +81,12 @@ const mapStateToProps = (state, ownProps) => {
   const syncType = formValueSelector(formName)(state, 'syncType');
   const initialValues = prepareInitialValues(ownProps.importSettings, ownProps.exportSettings);
 
+  initialValues.publik = true;
   if ((!ownProps.importSettings && !ownProps.exportSettings && !syncType) || (ownProps.importSettings && ownProps.exportSettings && syncType)) {
     return Object.assign({ syncType }, { initialValues });
   } else {
+    console.log('initial Values')
+    console.log(initialValues);
     return Object.assign({ syncType: "import" }, { initialValues });
   }
 }
