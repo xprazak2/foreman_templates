@@ -43,9 +43,13 @@ class TemplateSyncForm extends React.Component {
 
     const checked = (value, syncType) => value === syncType;
 
+    // return [
+    //   { label: 'Import', checked: checked("import", syncType), value: "import" },
+    //   { label: 'Export', checked: checked("export", syncType), value: "export" }
+    // ]
     return [
-      { label: 'Import', checked: checked("import", syncType), value: "import" },
-      { label: 'Export', checked: checked("export", syncType), value: "export" }
+      { label: 'Import', value: "import" },
+      { label: 'Export', value: "export" }
     ]
   }
 
@@ -77,17 +81,21 @@ const prepareInitialValues = (importSettings, exportSettings) =>
              {});
 
 const mapStateToProps = (state, ownProps) => {
+  // const initSyncType = { syncType: "import" };
   const syncType = formValueSelector(formName)(state, 'syncType');
-  const initialValues = prepareInitialValues(ownProps.importSettings, ownProps.exportSettings);
+  const initialValues = Object.assign(prepareInitialValues(ownProps.importSettings, ownProps.exportSettings), initSyncType);
 
-  initialValues.publik = true;
   if ((!ownProps.importSettings && !ownProps.exportSettings && !syncType) || (ownProps.importSettings && ownProps.exportSettings && syncType)) {
     return Object.assign({ syncType }, { initialValues });
   } else {
-    console.log('initial Values')
-    console.log(initialValues);
     return Object.assign({ syncType: "import" }, { initialValues });
   }
+
+  // if ((ownProps.importSettings && ownProps.exportSettings && !syncType)) {
+  //   return Object.assign(initSyncType, { initialValues });
+  // } else {
+  //   return Object.assign({ syncType }, { initialValues });
+  // }
 }
 
 const form = reduxForm({ form: formName })(TemplateSyncForm);

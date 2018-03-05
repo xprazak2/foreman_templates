@@ -1,12 +1,17 @@
 import React from 'react';
 
 import TextField from 'foremanReact/components/common/forms/TextField';
-import TextButtonField from 'foremanReact/components/common/forms/TextButtonField';
+// import TextButtonField from 'foremanReact/components/common/forms/TextButtonField';
 // import Button from 'foremanReact/components/common/forms/Button';
+import { FieldLevelHelp } from 'patternfly-react';
 
 const SyncSettingField = ({ setting, resetField }) => {
   // const button = (<Button className="btn btn-default">Click me!</Button>);
   // console.log(button);
+
+  const label = (setting) => (<span>
+      { `${setting.full_name} ` } <FieldLevelHelp content={setting.description}/>
+    </span>)
 
   const fieldSelector = (setting) => {
     if (setting.settings_type === 'boolean') {
@@ -30,7 +35,7 @@ const SyncSettingField = ({ setting, resetField }) => {
       // <TextField name={setting.name}
       //            label={`${setting.full_name} `}>{setting.value}</TextField>
       <TextButtonField name={setting.name}
-                       label={`${setting.full_name} `}
+                       label={label(setting)}
                        blank={{}}
                        item={setting}
                        buttonAttrs={ { buttonText: "Use Default",
