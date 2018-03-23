@@ -28,7 +28,7 @@ namespace :templates do
       lock:      ENV['lock'],
     }).import!
 
-    puts results.join("\n")
+    Rails.logger.info results.join("\n")
   end
 
   task :sync => :import
@@ -48,7 +48,7 @@ namespace :templates do
       metadata_export_mode: ENV['metadata_export_mode'],
     }).export!
 
-    puts 'Export finished'
+    Rails.logger.info 'Export finished'
   end
 
   desc 'Purge unwanted templates from foreman'
@@ -67,9 +67,9 @@ namespace :templates do
 
   desc 'Clean default data created by this plugin, this will permanently delete the data!'
   task :cleanup => :environment do
-    puts 'Cleaning data...'
+    Rails.logger.info 'Cleaning data...'
     ForemanTemplates::Cleaner.new.clean_up!
-    puts 'Clean up finished, you can now remove the plugin from your system'
+    Rails.logger.info 'Clean up finished, you can now remove the plugin from your system'
   end
 end
 
