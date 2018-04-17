@@ -5,6 +5,36 @@ import { FormControl, InputGroup, Button, Checkbox } from 'patternfly-react';
 import TextField from 'foremanReact/components/common/forms/TextField';
 import CommonForm from 'foremanReact/components/common/forms/CommonForm';
 
+const renderField = ({
+  input,
+  label,
+  className,
+  inputClassName,
+  fieldRequired,
+  disabled,
+  blank,
+  item,
+  fieldSelector,
+  meta: { error, touched },
+  buttonAttrs: { buttonText = "Action", buttonAction },
+}) => (
+  <CommonForm
+    label={label}
+    className={className}
+    inputClassName={inputClassName}
+    required={fieldRequired}
+    error={error}
+    touched={touched}
+  >
+    <InputGroup>
+      { fieldType(item, fieldSelector, input, disabled, blank) }
+      <InputGroup.Button>
+        <Button onClick={buttonAction} disabled={disabled}>{ buttonText }</Button>
+      </InputGroup.Button>
+    </InputGroup>
+  </CommonForm>
+)
+
 const TextButtonField = ({
   item,
   label,
@@ -12,48 +42,56 @@ const TextButtonField = ({
   className = '',
   inputClassName = 'col-md-6',
   blank = { label: "Choose one...", value: "" },
-  buttonAttrs: { buttonText = "Action", buttonAction },
+  buttonAttrs,
   fieldSelector,
-  disabled = false
-}) => (
-  <CommonForm label={label} className={className} inputClassName={inputClassName}>
-    <InputGroup>
-      <Field name={name} type={fieldSelector(item)} component={fieldType(item, fieldSelector)} blank={blank} item={item} disabled={disabled}></Field>
-      <InputGroup.Button>
-        <Button onClick={buttonAction} disabled={disabled}>{ buttonText }</Button>
-      </InputGroup.Button>
-    </InputGroup>
-  </CommonForm>
-);
+  validate,
+  disabled = false,
+  fieldRequired = false
+}) => {
 
-const fieldType = (item, fieldSelector) => {
+  return (
+        <Field name={name}
+               label={label}
+               type={fieldSelector(item)}
+               fieldSelector={fieldSelector}
+               component={renderField}
+               buttonAttrs={buttonAttrs}
+               blank={blank}
+               item={item}
+               disabled={disabled}
+               validate={item.validate}
+               fieldRequired={fieldRequired}>
+        </Field>
+  );
+}
+
+const fieldType = (item, fieldSelector, input, disabled, blank) => {
   if (!fieldSelector) {
-    return InputField;
+    return inputField;
   }
 
   switch (fieldSelector(item)) {
     case "text":
-      return InputField;
+      return inputField(input, disabled);
     case "select":
-      return SelectField;
+      return selectField(input, blank, item, disabled);
     case "checkbox":
-      return CheckboxField;
+      return checkboxField(input, item, disabled);
     default:
       throw new Error(`Unknown field type for ${item}`);
   }
 }
 
-const InputField = ({ input, disabled }) =>
+const inputField = (input, disabled) =>
   <FormControl { ...input } type="text" disabled={disabled}></FormControl>
 
-const SelectField = ({ input, blank, item, disabled }) =>
+const selectField = (input, blank, item, disabled) =>
   <FormControl { ...input } componentClass="select" disabled={disabled}>
     { addBlankOption(blank) }
     { item.selection.map((opt) => <option key={opt.value} value={opt.value}>{opt.label}</option>) }
   </FormControl>
 
-const CheckboxField = ({ input, item, disabled }) => {
-  console.log(item)
+const checkboxField = (input, item, disabled) => {
   return <Checkbox { ...input } disabled={disabled}></Checkbox>
 }
 

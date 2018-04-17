@@ -21,11 +21,12 @@ class NewTemplateSync extends React.Component {
     }
 
     render() {
-      const { apiUrls: { importUrl, exportUrl }, importSettings, exportSettings, loadingSettings, history } = this.props;
+      const { apiUrls: { importUrl, exportUrl }, importSettings, exportSettings, loadingSettings, history, validationData } = this.props;
       return (<div>
                 <Spinner loading={loadingSettings}>
                   <TemplateSyncForm importSettings={importSettings}
                                     exportSettings={exportSettings}
+                                    validationData={validationData}
                                     importUrl={importUrl}
                                     exportUrl={exportUrl}
                                     history={history} ></TemplateSyncForm>

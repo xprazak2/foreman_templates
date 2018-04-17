@@ -56,7 +56,7 @@ class TemplateSyncForm extends React.Component {
   }
 
   render() {
-    const { submitting, error, handleSubmit, importSettings, exportSettings, syncType, dispatch, history } = this.props;
+    const { submitting, error, handleSubmit, importSettings, exportSettings, syncType, dispatch, history, validationData } = this.props;
     console.log('Form Props')
     console.log(this.props);
 
@@ -68,7 +68,13 @@ class TemplateSyncForm extends React.Component {
       <div>
         <Form onSubmit={handleSubmit(submit)} disabled={submitting} submitting={submitting} error={error} onCancel={redirectToResult(history)}>
           <RadioButtonGroup name="syncType" controlLabel="Action type" radios={this.radioButtons(syncType)} disabled={submitting}></RadioButtonGroup>
-          <SyncSettingsFields importSettings={importSettings} exportSettings={exportSettings} syncType={syncType} resetField={resetToDefault} disabled={submitting}></SyncSettingsFields>
+          <SyncSettingsFields importSettings={importSettings}
+                              exportSettings={exportSettings}
+                              syncType={syncType}
+                              resetField={resetToDefault}
+                              disabled={submitting}
+                              validationData={validationData}>
+          </SyncSettingsFields>
         </Form>
       </div>
     );
@@ -100,6 +106,6 @@ const mapStateToProps = (state, ownProps) => {
   //   return Object.assign({ syncType }, { initialValues });
   // }
 }
-  
+
 const form = reduxForm({ form: formName })(TemplateSyncForm);
 export default connect(mapStateToProps, FormActions)(form);

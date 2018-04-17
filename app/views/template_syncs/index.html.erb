@@ -14,5 +14,6 @@
                               :exportUrl => export_api_templates_path,
                               :syncSettingsUrl => sync_settings_template_syncs_path,
                               :importUrl => import_api_templates_path
-                              }
+                              },
+                            :validationData => { :template_sync_repo => ForemanTemplates::Action.repo_start_with}
                           }.to_json )%>
