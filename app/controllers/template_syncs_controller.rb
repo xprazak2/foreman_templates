@@ -10,6 +10,33 @@ class TemplateSyncsController < ApplicationController
     @results = OpenStruct.new(:import => import_settings, :export => export_settings)
   end
 
+  def import
+    render :json => { :results => "import", :templates => { :provisioning_templates => [ { :id => 1, :name => 'some_template', :locked => true, :kind => 'PXELinux', :snippet => false },
+                                                                                       { :id => 2, :name => 'another template', :locked => false, :kind => 'PXEGrub', :snippet => true} ],
+                                                          :ptables => [ { :id => 5,
+                                                                          :name => "somePtable",
+                                                                          :locked => false,
+                                                                          :kind => "",
+                                                                          :snippet => false,
+                                                                          :errors => { :name => 'has already been taken', :kind => "is invalid" }
+                                                                        } ]
+                                                        } }
+
+  end
+
+  def export
+    render :json => { :results => "export", :templates => { :provisioning_templates => [ { :id => 1, :name => 'some_template', :locked => true, :kind => 'PXELinux', :snippet => false },
+                                                                                       { :id => 2, :name => 'another template', :locked => false, :kind => 'PXEGrub', :snippet => true} ],
+                                                          :ptables => [ { :id => 5,
+                                                                          :name => "somePtable",
+                                                                          :locked => false,
+                                                                          :kind => "",
+                                                                          :snippet => false,
+                                                                          :errors => { :name => 'has already been taken', :kind => "is invalid" }
+                                                                        } ]
+                                                        } }
+  end
+
   def action_permission
     case params[:action]
     when 'sync_settings'

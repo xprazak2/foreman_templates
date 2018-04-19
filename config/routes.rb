@@ -2,6 +2,8 @@ Rails.application.routes.draw do
   resources :template_syncs, :only => [:index] do
     collection do
       get 'sync_settings'
+      post 'import'
+      post 'export'
     end
   end
 

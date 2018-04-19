@@ -1,11 +1,15 @@
 import React from 'react';
 import { Icon, OverlayTrigger, Button, Popover, Table as PfTable } from 'patternfly-react';
-import { isEmpty, curry, reduce, concat } from 'lodash';
+
+import append from 'ramda/src/append';
+import reduce from 'ramda/src/reduce';
+import concat from 'ramda/src/concat';
+import isEmpty from 'ramda/src/isEmpty';
 
 const headerFormat = value => <PfTable.Heading>{value}</PfTable.Heading>;
 const cellFormat = value => <PfTable.Cell>{value}</PfTable.Cell>;
 
-const faIconFormat = curry((iconName, value) => <PfTable.Cell align="center">{ value ? <Icon type='fa' name={iconName}/> : ""}</PfTable.Cell>);
+const faIconFormat = iconName => value => <PfTable.Cell align="center">{ value ? <Icon type='fa' name={iconName}/> : ""}</PfTable.Cell>;
 const lockedFormat = faIconFormat('lock');
 const snippetFormat = faIconFormat('check');
 
@@ -23,9 +27,11 @@ const errorsFormat = errors => (
 
 const ErrorDetails = ({ errors }) => {
   const trigger = 'click';
-  const errorString = reduce(errors, (memo, value, key) => (
-    memo + `${key} ${value}, `
-  ), "");
+
+  const errorString = reduce((memo, key) => (
+    append(`${key} ${errors[key]}`, memo)
+  ), [], Object.keys(errors)).join(', ')
+
   const overlay = <Popover id="popover">{errorString}</Popover>
   const rootClose = close === 'true'
 
@@ -111,5 +117,6 @@ const errorsColumn =
 
 export const createColumnsFor = (type) => {
   const label = type === 'import' ? __('Imported?') : __('Exported?')
-  return reduce([baseColumns, [statusColumnHeader(label)], [errorsColumn]], concat, [])
+  const res = reduce(concat, [], [baseColumns, [statusColumnHeader(label)], [errorsColumn]])
+  return res;
 }
