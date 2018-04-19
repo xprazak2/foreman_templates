@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { isEmpty } from 'lodash';
+import isEmpty from 'ramda/src/isEmpty';
 
 import EmptySyncResult from './EmptySyncResult';
 import FinishedSyncResult from './FinishedSyncResult';

@@ -2,18 +2,14 @@
 
 <%= webpacked_plugins_js_for :foreman_templates %>
 
-<div id="new-template-sync">
 <div id="foreman-templates">
-<%#= mount_react_component('NewTemplateSync', '#new-template-sync', { :exportUrl => export_api_templates_path,
-                                                                     :syncSettingsUrl => sync_settings_template_syncs_path,
-                                                                     :importUrl => import_api_templates_path }.to_json )%>
 
 <%= mount_react_component('ForemanTemplates',
                           '#foreman-templates',
                           { :apiUrls => {
-                              :exportUrl => export_api_templates_path,
+                              :exportUrl => export_template_syncs_path,
                               :syncSettingsUrl => sync_settings_template_syncs_path,
-                              :importUrl => import_api_templates_path
+                              :importUrl => import_template_syncs_path
                               },
-                            :validationData => { :template_sync_repo => ForemanTemplates::Action.repo_start_with}
+                            :validationData => { :template_sync_repo => ForemanTemplates::Action.repo_start_with }
                           }.to_json )%>

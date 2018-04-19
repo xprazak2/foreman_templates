@@ -15,7 +15,6 @@ class NewTemplateSync extends React.Component {
     }
 
     componentDidMount() {
-      // console.log('component did mount: ', this.props);
       const { apiUrls: { syncSettingsUrl }, getSyncSettings } = this.props;
       getSyncSettings(syncSettingsUrl);
     }
