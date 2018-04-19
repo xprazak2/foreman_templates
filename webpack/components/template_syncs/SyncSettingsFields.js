@@ -1,9 +1,5 @@
 import React from 'react';
 import { required } from 'redux-form-validators';
-
-// this one is broken: some(ary, startsWith(value)) cannot be used due to optional params
-// import { startsWith } from 'lodash';
-
 import startsWith from 'ramda/src/startsWith';
 import flip from 'ramda/src/flip';
 import any from 'ramda/src/any';

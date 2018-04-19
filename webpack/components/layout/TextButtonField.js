@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Field } from 'redux-form';
 import { FormControl, InputGroup, Button, Checkbox } from 'patternfly-react';
+
 import TextField from 'foremanReact/components/common/forms/TextField';
 import CommonForm from 'foremanReact/components/common/forms/CommonForm';
 
