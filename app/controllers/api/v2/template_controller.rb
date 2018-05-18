@@ -20,21 +20,11 @@ module Api
       param_group :foreman_template_sync_params
       param_group :taxonomies, ::Api::V2::BaseController
       def import
-        # verbose = params['verbose']
-        # @result = ForemanTemplates::TemplateImporter.new(template_import_params).import!
-        # render :json => { :message => { :templates => @result[:results].map { |res| res.to_h(verbose) },
-        #                                 :repo => @result[:repo],
-        #                                 :branch => @result[:branch] } }
-        render :json => { :results => "import", :templates => { :provisioning_templates => [ { :id => 1, :name => 'some_template', :locked => true, :kind => 'PXELinux', :snippet => false },
-                                                                                               { :id => 2, :name => 'another template', :locked => false, :kind => 'PXEGrub', :snippet => true} ],
-                                                                  :ptables => [ { :id => 5,
-                                                                                  :name => "somePtable",
-                                                                                  :locked => false,
-                                                                                  :kind => "",
-                                                                                  :snippet => false,
-                                                                                  :errors => { :name => 'has already been taken', :kind => "is invalid" }
-                                                                                } ]
-                                                                } }
+        verbose = params['verbose']
+        @result = ForemanTemplates::TemplateImporter.new(template_import_params).import!
+        render :json => { :message => { :templates => @result[:results].map { |res| res.to_h(verbose) },
+                                        :repo => @result[:repo],
+                                        :branch => @result[:branch] } }
       end
 
       api :POST, "/templates/export", N_("Initiate Export")
@@ -42,18 +32,8 @@ module Api
       param_group :foreman_template_sync_params
       param_group :taxonomies, ::Api::V2::BaseController
       def export
-        # @result = ForemanTemplates::TemplateExporter.new(template_export_params).export!
-        # render :json => { :message => @result.to_h }, :status => @result.exported ? 200 : 500
-        render :json => { :results => "export", :templates => { :provisioning_templates => [ { :id => 1, :name => 'some_template', :locked => true, :kind => 'PXELinux', :snippet => false },
-                                                                                               { :id => 2, :name => 'another template', :locked => false, :kind => 'PXEGrub', :snippet => true} ],
-                                                                  :ptables => [ { :id => 5,
-                                                                                  :name => "somePtable",
-                                                                                  :locked => false,
-                                                                                  :kind => "",
-                                                                                  :snippet => false,
-                                                                                  :errors => { :name => 'has already been taken', :kind => "is invalid" }
-                                                                                } ]
-                                                                } }
+        @result = ForemanTemplates::TemplateExporter.new(template_export_params).export!
+        render :json => { :message => @result.to_h }, :status => @result.exported ? 200 : 500
       end
     end
   end

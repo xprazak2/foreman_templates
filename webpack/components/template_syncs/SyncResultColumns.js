@@ -60,11 +60,12 @@ const statusColumnHeader = (name) => (
   }
 )
 
-const baseColumns = [
+const baseColumns = (sortableTransform, sortingFromatter) => [
   {
     header: {
       label: 'Name',
-      formatters: [headerFormat]
+      transforms: [sortableTransform]
+      formatters: [sortingFromatter]
     },
     cell: {
       formatters: [cellFormat]
@@ -115,7 +116,7 @@ const errorsColumn =
     property: 'errors'
   }
 
-export const createColumnsFor = (type) => {
+export const createColumnsFor = (type) => (sortableTransform, sortingFromatter) => {
   const label = type === 'import' ? __('Imported?') : __('Exported?')
   const res = reduce(concat, [], [baseColumns, [statusColumnHeader(label)], [errorsColumn]])
   return res;
