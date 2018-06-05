@@ -64,7 +64,7 @@ const baseColumns = (sortableTransform, sortingFromatter) => [
   {
     header: {
       label: 'Name',
-      transforms: [sortableTransform]
+      transforms: [sortableTransform],
       formatters: [sortingFromatter]
     },
     cell: {

@@ -76,14 +76,14 @@ class SyncResultList extends React.Component {
     // const rows = reduce(concat, [], Object.values(templates));
     const {rows, sortingColumns, columns } = this.state;
 
-    const sortedRows = compose({
+    const sortedRows = compose(
       sort.sorter({
         columns,
         sortingColumns,
         sort: orderBy,
         strategy: sort.strategies.byProperty
       })
-    })(rows);
+    )(rows);
 
     return (
       <PfTable.PfProvider striped bordered hover columns={columns}>
