@@ -10,7 +10,8 @@ import RadioButtonGroup from 'foremanReact/components/common/forms/RadioButtonGr
 import * as FormActions from 'foremanReact/redux/actions/common/forms';
 import TextField from 'foremanReact/components/common/forms/TextField';
 
-import SyncSettingsFields from './SyncSettingsFields';
+import SyncSettingsFields from './SyncSettingFields';
+import Title from '../layout/Title';
 
 const formName = 'newTemplateSync';
 
@@ -73,6 +74,7 @@ class TemplateSyncForm extends React.Component {
 
     return(
       <div>
+        <Title titleText="Import or Export Templates" />
         <Form onSubmit={handleSubmit(submit)} disabled={submitting || !valid} submitting={submitting} error={error} onCancel={redirectToResult(history)}>
           <RadioButtonGroup name="syncType" controlLabel="Action type" radios={this.radioButtons(syncType)} disabled={submitting}></RadioButtonGroup>
           <SyncSettingsFields importSettings={importSettings}

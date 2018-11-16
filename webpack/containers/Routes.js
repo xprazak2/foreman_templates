@@ -1,8 +1,8 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-import NewTemplateSync from '../components/template_syncs/NewTemplateSync';
-import TemplateSyncResult from '../components/template_syncs/TemplateSyncResult';
+import NewTemplateSync from '../components/NewTemplateSync/NewTemplateSync';
+import TemplateSyncResult from '../components/TemplateSyncResult/TemplateSyncResult';
 
 const links = [
   {

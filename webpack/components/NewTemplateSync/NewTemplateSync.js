@@ -1,9 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-
-import * as TemplateSyncActions from '../../actions/template_sync';
-import TemplateSyncForm from './TemplateSyncForm';
+import * as TemplateSyncActions from './NewTemplateSyncActions';
+import TemplateSyncForm from './NewTemplateSyncForm';
 
 import { Spinner } from 'patternfly-react';
 

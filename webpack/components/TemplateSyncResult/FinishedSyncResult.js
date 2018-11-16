@@ -4,12 +4,12 @@ import { Button } from 'patternfly-react';
 import { createColumnsFor } from './SyncResultColumns';
 import SyncResultList from './SyncResultList';
 import TitleActions from '../layout/TitleActions';
-
+import Title from '../layout/Title';
 
 const FinishedSyncResult = ({ templates, type, redirectBack }) => {
   return (
     <div>
-      <h2>You tried to { type } the following templates</h2>
+      <Title titleText={`You tried to ${type} the following templates`} />
       <div className="row">
         <TitleActions>
           <Button onClick={redirectBack}>{ __('Back') }</Button>

@@ -1,4 +1,4 @@
-import { TEMPLATESYNC_FORM_SUBMITTED } from '../consts';
+import { TEMPLATESYNC_FORM_SUBMITTED } from '../../consts';
 
 const syncResult = (state = {}, action) => {
   const { payload } = action;

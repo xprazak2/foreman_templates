@@ -2,7 +2,7 @@ import {
   SYNC_SETTINGS_REQUEST,
   SYNC_SETTINGS_SUCCESS,
   SYNC_SETTINGS_FAILURE,
-} from '../consts';
+} from '../../consts';
 
 const syncSettings = (state = {}, action) => {
   const { payload } = action;
