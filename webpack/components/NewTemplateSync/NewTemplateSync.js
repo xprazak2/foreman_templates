@@ -8,11 +8,6 @@ import { Spinner } from 'patternfly-react';
 
 
 class NewTemplateSync extends React.Component {
-    constructor(props) {
-      console.log(props)
-      super(props);
-    }
-
     componentDidMount() {
       const { apiUrls: { syncSettingsUrl }, getSyncSettings } = this.props;
       getSyncSettings(syncSettingsUrl);
@@ -27,7 +22,7 @@ class NewTemplateSync extends React.Component {
                                     validationData={validationData}
                                     importUrl={importUrl}
                                     exportUrl={exportUrl}
-                                    history={history} ></TemplateSyncForm>
+                                    history={history} />
                 </Spinner>
               </div>);
     }

@@ -8,8 +8,20 @@ import identity from 'ramda/src/identity';
 
 import SyncSettingField from './SyncSettingField';
 
+
+
 const repoFormat = memoizeWith(identity, formatAry => value => {
-  if (value && any(flip(startsWith)(value), formatAry)) {
+  console.log(formatAry)
+  const valid = formatAry.map((memo, item) => {
+    console.log(value)
+    console.log(item)
+    const res = startsWith(value, item);
+    console.log(res)
+    return res;
+  })
+                        .reduce((memo, item) => (item || memo), false)
+
+  if (value && valid) {
     return undefined;
   } else {
     return `Invalid repo format, must start with one of: ${formatAry.join(', ')}`;
