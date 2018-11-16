@@ -25,6 +25,8 @@ const SyncSettingField = ({ setting, resetField, disabled }) => {
     resetField(setting_name, setting_value)
   }
 
+  console.log(label(setting))
+
   return (
       <TextButtonField name={setting.name}
                        label={label(setting)}

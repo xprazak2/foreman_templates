@@ -118,6 +118,6 @@ const errorsColumn =
 
 export const createColumnsFor = (type) => (sortableTransform, sortingFromatter) => {
   const label = type === 'import' ? __('Imported?') : __('Exported?')
-  const res = reduce(concat, [], [baseColumns, [statusColumnHeader(label)], [errorsColumn]])
+  const res = reduce(concat, [], [baseColumns(sortableTransform, sortingFromatter), [statusColumnHeader(label)], [errorsColumn]])
   return res;
 }
