@@ -11,7 +11,7 @@ class TemplateSyncsController < ApplicationController
   end
 
   def import
-    render :json => { :results => "import", :templates => { :provisioning_templates => [ { :id => 1, :name => 'some_template', :locked => true, :kind => 'PXELinux', :snippet => false },
+    render :json => { :result_action => "import", :templates => { :provisioning_templates => [ { :id => 1, :name => 'some_template', :locked => true, :kind => 'PXELinux', :snippet => false },
                                                                                        { :id => 2, :name => 'another template', :locked => false, :kind => 'PXEGrub', :snippet => true} ],
                                                           :ptables => [ { :id => 5,
                                                                           :name => "somePtable",
@@ -25,7 +25,7 @@ class TemplateSyncsController < ApplicationController
   end
 
   def export
-    render :json => { :results => "export", :templates => { :provisioning_templates => [ { :id => 1, :name => 'some_template', :locked => true, :kind => 'PXELinux', :snippet => false },
+    render :json => { :result_action => "export", :templates => { :provisioning_templates => [ { :id => 1, :name => 'some_template', :locked => true, :kind => 'PXELinux', :snippet => false },
                                                                                        { :id => 2, :name => 'another template', :locked => false, :kind => 'PXEGrub', :snippet => true} ],
                                                           :ptables => [ { :id => 5,
                                                                           :name => "somePtable",

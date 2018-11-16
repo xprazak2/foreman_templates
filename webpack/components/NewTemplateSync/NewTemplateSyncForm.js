@@ -15,19 +15,11 @@ import Title from '../layout/Title';
 
 const formName = 'newTemplateSync';
 
-const redirect = curry((args) => {
-  history.push({ pathname: '/template_syncs/result' })
-})
-
 const submit = (values, dispatch, props) => {
   const { submitForm, syncType, importUrl, exportUrl, history } = props;
-  console.log('submitting form, props:');
-  console.log(props);
   const url = syncType === 'import' ? importUrl : exportUrl;
   return submitForm({ url, values, message: `Templates were ${syncType}ed.`, item: 'TemplateSync' }).then(
     (args) => {
-      console.log('redirect args')
-      console.log(args)
       history.replace({ pathname: '/template_syncs/result' })
     }
   )
@@ -37,15 +29,10 @@ const redirectToResult = (history) => () => history.push({ pathname: '/template_
 
 class TemplateSyncForm extends React.Component {
 
-  constructor(props) {
-    super(props);
-    console.log(props)
-  }
-
   radioButtons(syncType) {
     const changeSyncType = (event) => {
       console.log(`Changing sync type to ${event.target.value}`);
-      // this.setState({ syncType: event.target.value });
+       this.setState({ syncType: event.target.value });
     }
 
     const checked = (value, syncType) => value === syncType;

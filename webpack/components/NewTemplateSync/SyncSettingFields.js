@@ -34,9 +34,8 @@ const SyncSettingsFields = ({ importSettings, exportSettings, syncType, resetFie
     return settingsAry.map((setting) => {
       switch(setting.name) {
         case 'template_sync_repo':
-          setting['required'] = true;
-          setting['validate'] = [repoFormat(validationData['template_sync_repo'])]
-          return setting;
+          return setting.set('required', true)
+                        .set('validate', [repoFormat(validationData['template_sync_repo'])]);
         default:
           return setting;
       }
