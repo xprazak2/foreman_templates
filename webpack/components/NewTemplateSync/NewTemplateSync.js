@@ -1,11 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
-
-import * as TemplateSyncActions from './NewTemplateSyncActions';
-import TemplateSyncForm from './NewTemplateSyncForm';
-
 import { Spinner } from 'patternfly-react';
 
+import TemplateSyncForm from './NewTemplateSyncForm';
 
 class NewTemplateSync extends React.Component {
     componentDidMount() {
@@ -28,8 +24,4 @@ class NewTemplateSync extends React.Component {
     }
 }
 
-const mapStateToProps = ({ foreman_templates: { syncSettings } }, ownProps) => {
-  return syncSettings
-};
-
-export default connect(mapStateToProps, TemplateSyncActions)(NewTemplateSync);
+export default NewTemplateSync;

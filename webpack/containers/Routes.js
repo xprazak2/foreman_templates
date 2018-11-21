@@ -1,8 +1,8 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-import NewTemplateSync from '../components/NewTemplateSync/NewTemplateSync';
-import TemplateSyncResult from '../components/TemplateSyncResult/TemplateSyncResult';
+import NewTemplateSync from '../components/NewTemplateSync';
+import TemplateSyncResult from '../components/TemplateSyncResult';
 
 const links = [
   {
@@ -18,23 +18,11 @@ const links = [
 ];
 
 
-// const links = [
-//   {
-//     title: 'New Template Sync',
-//     path: 'template_syncs',
-//     Component: TemplateSyncResult,
-//   },
-// ];
-
-
 export default (data) => {
-  // console.log('routes data')
-  // console.log(data)
   return (
   <div>
     {links.map(({ path, Component }) => (
       <Route exact key={path} path={`/${path}`} render={(props) => <Component {...props} {...data} />} />
-      // <Route exact key={path} path={`/${path}`} component={Component} />
     ))}
   </div>
 )};

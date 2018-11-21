@@ -5,9 +5,11 @@ import TextField from 'foremanReact/components/common/forms/TextField';
 import TextButtonField from '../layout/TextButtonField';
 
 const SyncSettingField = ({ setting, resetField, disabled }) => {
-  const label = (setting) => (<span>
+  const label = (setting) => (
+    <div>
       { `${setting.full_name} ` } <FieldLevelHelp content={setting.description}/>
-    </span>)
+    </div>
+  );
 
   const fieldSelector = (setting) => {
     if (setting.settings_type === 'boolean') {
@@ -24,8 +26,6 @@ const SyncSettingField = ({ setting, resetField, disabled }) => {
   const handleReset = (setting_name, setting_value) => {
     resetField(setting_name, setting_value)
   }
-
-  console.log(label(setting))
 
   return (
       <TextButtonField name={setting.name}

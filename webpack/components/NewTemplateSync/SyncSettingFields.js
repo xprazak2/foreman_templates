@@ -1,25 +1,12 @@
 import React from 'react';
 import { required } from 'redux-form-validators';
-import startsWith from 'ramda/src/startsWith';
-import flip from 'ramda/src/flip';
-import any from 'ramda/src/any';
-import memoizeWith from 'ramda/src/memoizeWith';
-import identity from 'ramda/src/identity';
-
+import { memoize } from 'lodash';
 import SyncSettingField from './SyncSettingField';
 
 
-
-const repoFormat = memoizeWith(identity, formatAry => value => {
-  console.log(formatAry)
-  const valid = formatAry.map((memo, item) => {
-    console.log(value)
-    console.log(item)
-    const res = startsWith(value, item);
-    console.log(res)
-    return res;
-  })
-                        .reduce((memo, item) => (item || memo), false)
+const repoFormat = memoize(formatAry => value => {
+  const valid = formatAry.map((item) => value.startsWith(item))
+                         .reduce((memo, item) => (item || memo), false)
 
   if (value && valid) {
     return undefined;
@@ -34,9 +21,9 @@ const SyncSettingsFields = ({ importSettings, exportSettings, syncType, resetFie
       <div>
         { addValidations(settingsAry).map((setting, index) =>
           (<SyncSettingField setting={setting}
-                            key={setting.name}
-                            disabled={disabled}
-                            resetField={resetField}>
+                             key={setting.name}
+                             disabled={disabled}
+                             resetField={resetField}>
           </SyncSettingField>))
         }
       </div>

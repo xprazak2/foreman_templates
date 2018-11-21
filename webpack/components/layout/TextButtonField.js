@@ -51,18 +51,18 @@ const TextButtonField = ({
 }) => {
 
   return (
-        <Field name={name}
-               label={label}
-               type={fieldSelector(item)}
-               fieldSelector={fieldSelector}
-               component={renderField}
-               buttonAttrs={buttonAttrs}
-               blank={blank}
-               item={item}
-               disabled={disabled}
-               validate={item.validate}
-               fieldRequired={fieldRequired}>
-        </Field>
+    <Field name={name}
+           label={label}
+           type={fieldSelector(item)}
+           fieldSelector={fieldSelector}
+           component={renderField}
+           buttonAttrs={buttonAttrs}
+           blank={blank}
+           item={item}
+           disabled={disabled}
+           validate={item.validate}
+           fieldRequired={fieldRequired}>
+    </Field>
   );
 }
 

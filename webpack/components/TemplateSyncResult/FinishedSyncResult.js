@@ -6,7 +6,13 @@ import SyncResultList from './SyncResultList';
 import TitleActions from '../layout/TitleActions';
 import Title from '../layout/Title';
 
-const FinishedSyncResult = ({ templates, type, redirectBack }) => {
+const FinishedSyncResult = (props) => {
+  const {
+    templates,
+    type,
+    redirectBack
+  } = props;
+  console.log(props);
   return (
     <div>
       <Title titleText={`You tried to ${type} the following templates`} />
