@@ -28,11 +28,6 @@ const redirectToResult = (history) => () => history.push({ pathname: '/template_
 class TemplateSyncForm extends React.Component {
 
   radioButtons(syncType) {
-    const changeSyncType = (event) => {
-      console.log(`Changing sync type to ${event.target.value}`);
-       this.setState({ syncType: event.target.value });
-    }
-
     const checked = (value, syncType) => value === syncType;
 
     return [
@@ -83,12 +78,13 @@ const prepareInitialValues = (importSettings, exportSettings) =>
 const mapStateToProps = (state, ownProps) => {
   const initSyncType = { syncType: "import" };
   const syncType = formValueSelector(formName)(state, 'syncType');
+
   const initialValues = prepareInitialValues(ownProps.importSettings, ownProps.exportSettings);
 
-  if ((!ownProps.importSettings && !ownProps.exportSettings && !syncType) || (ownProps.importSettings && ownProps.exportSettings && syncType)) {
-    return Object.assign({ syncType }, { initialValues });
+  if (syncType) {
+    return ({ initialValues: { ...initialValues, syncType }, syncType });
   } else {
-    return Object.assign(initSyncType, { initialValues });
+    return ({ initialValues: { ...initialValues, ...initSyncType }, ...initSyncType });
   }
 }
 

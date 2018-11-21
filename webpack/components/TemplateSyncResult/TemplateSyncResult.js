@@ -16,7 +16,7 @@ class TemplateSyncResult extends React.Component {
       <div>
         { isEmpty(syncResult.templates) ?
             <EmptySyncResult primaryAction={redirectBack}/> :
-            <FinishedSyncResult templates={syncResult.templates} type={syncResult.result} redirectBack={redirectBack}/>
+            <FinishedSyncResult templates={syncResult.templates} type={syncResult.resultAction} redirectBack={redirectBack}/>
         }
       </div>
     )

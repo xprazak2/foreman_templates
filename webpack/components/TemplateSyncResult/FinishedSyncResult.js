@@ -12,7 +12,6 @@ const FinishedSyncResult = (props) => {
     type,
     redirectBack
   } = props;
-  console.log(props);
   return (
     <div>
       <Title titleText={`You tried to ${type} the following templates`} />
