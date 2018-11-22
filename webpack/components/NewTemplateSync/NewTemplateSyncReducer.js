@@ -15,7 +15,6 @@ const initialState = Immutable({
 
 const syncSettings = (state = initialState, action) => {
   const { payload } = action;
-  console.log(payload)
   switch(action.type) {
     case SYNC_SETTINGS_REQUEST:
       return state.set('loadingSettings', true);
