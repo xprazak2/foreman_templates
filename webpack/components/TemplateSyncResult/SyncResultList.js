@@ -3,6 +3,7 @@ import { ListView } from 'patternfly-react';
 import Pagination from 'foremanReact/components/Pagination/PaginationWrapper';
 
 import SyncedTemplate from './SyncedTemplate';
+import './overrides.scss';
 
 class SyncResultList extends React.Component {
   constructor(props) {
