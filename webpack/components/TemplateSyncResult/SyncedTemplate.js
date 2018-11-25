@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListView } from 'patternfly-react';
+import { ListView, Grid } from 'patternfly-react';
 import classNames from 'classnames';
 import { pick, mergeWith, isEmpty } from 'lodash';
 
@@ -12,7 +12,7 @@ class SyncedTemplate extends React.Component {
   }
 
   toggleExpand() {
-    this.setState('expanded', !this.state.expanded)
+    this.setState({ expanded: !this.state.expanded });
   };
 
   render() {
@@ -45,13 +45,17 @@ class SyncedTemplate extends React.Component {
       });
     };
 
-    const infoItemId = (template, key) => `${template.id}-${key}`;
+    const infoItemId = (template, key) => {
+      const id = `${template.id}-${key}`;
+      console.log(id);
+      return id;
+    }
 
     const errorsInfoItem = (template, key) => {
       if (isEmpty(template.errors)) {
         return iconInfoItem(template, key, 'pficon pficon-ok');
       }
-      return iconInfoItem(template, key, 'pficon pficon-error-circle-o');
+      return iconInfoExpandableItem(template, key, 'pficon pficon-error-circle-o');
     }
 
     const stringInfoItem = (template, key, translate = false) => {
@@ -65,24 +69,24 @@ class SyncedTemplate extends React.Component {
       return infoItem(infoItemId(template, key), child);
     }
 
-    const iconInfoExpandableItem = (template, key, cssClassNames, expanded, toggleExpand) => {
-
+    const iconInfoExpandableItem = (template, key, cssClassNames) => {
       const child = (
         <ListView.Expand
-          expanded={item.expanded && prop === item.expandType}
-          toggleExpanded={() => {
-            this.toggleExpand(item, prop);
-          }}
+          expanded={this.state.expanded}
+          toggleExpanded={() => this.toggleExpand()}
         >
           <span className={cssClassNames} />
-          <strong>{item.properties[prop]}</strong> {prop}
         </ListView.Expand>
       )
-      return InfoItem(infoItemId(template, key), child);
+      return infoItem(infoItemId(template, key), child);
     }
 
-    const emptyInfoItem = (itemId) => (
-      infoItem(itemId, '')
+    const formatErrors = errors => {
+      return 'There were errors!';
+    }
+
+    const emptyInfoItem = (template, key) => (
+      infoItem(infoItemId(template, key), '')
     )
 
     const infoItem = (itemId, child) => {
@@ -94,25 +98,22 @@ class SyncedTemplate extends React.Component {
     }
 
     let errorProps = {};
-    let gridRow = '';
+    let gridRow = undefined;
 
     if (!isEmpty(template.errors)) {
-      errorProps = { compoundExpand: true, compoundExpanded: template.errors, onCloseCompoundExpand: () => {}};
+      errorProps = { compoundExpand: true, compoundExpanded: this.state.expanded, onCloseCompoundExpand: () => this.toggleExpand() };
       gridRow = (
         <Grid.Row>
-          <Grid.Col sm={11}>{template.errors}</Grid.Col>
+          <Grid.Col sm={11}>{formatErrors(template.errors)}</Grid.Col>
         </Grid.Row>
       )
     }
 
     return (
         <ListView.Item
-          id={template.id}
-          className={`listViewItem--listItemVariants`}
+          key={template.id}
           heading={template.name}
-          actions={''}
           additionalInfo={additionalInfo(template)}
-          stacked
           { ...errorProps }
         >
           { gridRow }

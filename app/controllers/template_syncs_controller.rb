@@ -12,13 +12,12 @@ class TemplateSyncsController < ApplicationController
 
   def import
     render :json => { :result_action => "import", :templates => { :provisioning_templates => [ { :id => 1, :name => 'some_template', :locked => true, :kind => 'PXELinux', :snippet => false },
-                                                                                       { :id => 2, :name => 'another template', :locked => false, :kind => 'PXEGrub', :snippet => true} ],
+                                                                                       { :id => 2, :name => 'another template', :locked => false, :kind => 'PXEGrub', :snippet => true, :errors => { :name => 'has already been taken', :kind => "is invalid" }} ],
                                                           :ptables => [ { :id => 5,
                                                                           :name => "somePtable",
                                                                           :locked => false,
                                                                           :kind => "",
-                                                                          :snippet => false,
-                                                                          :errors => { :name => 'has already been taken', :kind => "is invalid" }
+                                                                          :snippet => false
                                                                         } ]
                                                         } }
 
