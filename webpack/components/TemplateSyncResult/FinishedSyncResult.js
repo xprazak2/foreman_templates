@@ -7,12 +7,15 @@ import Title from '../layout/Title';
 import Search from './Search';
 import ConnectedSearch from './ConnectedSearch';
 
+
 const FinishedSyncResult = (props) => {
   const {
     templates,
     type,
     redirectBack,
-    filterString
+    filterString,
+    pagination,
+    pageChange
   } = props;
   return (
     <div>
@@ -23,7 +26,10 @@ const FinishedSyncResult = (props) => {
           <Button onClick={redirectBack}>{ __('Back') }</Button>
         </TitleActions>
       </div>
-      <SyncResultList templates={templates} filterString={filterString} />
+      <SyncResultList templates={templates}
+                      filterString={filterString}
+                      pagination={pagination}
+                      pageChange={pageChange}/>
     </div>
   )
 }

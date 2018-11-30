@@ -4,6 +4,8 @@ import Pagination from 'foremanReact/components/Pagination/PaginationWrapper';
 
 import ConnectedSearch from './ConnectedSearch';
 import SyncedTemplate from './SyncedTemplate';
+import { templatesPage } from './TemplateSyncResultSelectors';
+
 import './overrides.scss';
 
 class SyncResultList extends React.Component {
@@ -17,23 +19,27 @@ class SyncResultList extends React.Component {
       return Object.values(templates).reduce((memo, item) => memo.concat(item), [])
     }
 
-    const { filterString } = this.props;
+    const { filterString, pagination, pageChange } = this.props;
 
     const filterPredicate = (filterString) => (template) => {
       return filterString ? template.name.match(filterString) : true;
     }
+
+    const reorderedTemplates = templateReorder(this.props.templates)
 
     return (
       <div>
         <ListView>
           <Pagination
             viewType="list"
-            itemCount={0}
-            pagination={{}}
-            onChange={() => {}}
+            itemCount={reorderedTemplates.length}
+            pagination={pagination}
+            onChange={pageChange}
             dropdownButtonId='template-sync-result-dropdown'
           />
-          { templateReorder(this.props.templates).filter(filterPredicate(filterString)).map((template) => <SyncedTemplate template={template} key={template.id}/>)}
+          { templatesPage(reorderedTemplates, pagination)
+              .filter(filterPredicate(filterString))
+              .map((template) => <SyncedTemplate template={template} key={template.id}/>) }
         </ListView>
       </div>
     )

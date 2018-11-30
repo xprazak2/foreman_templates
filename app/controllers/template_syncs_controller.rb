@@ -14,7 +14,25 @@ class TemplateSyncsController < ApplicationController
     render :json => { :result_action => "import", :templates => { :provisioning_templates => [ { :id => 1, :name => 'some_template', :locked => true, :kind => 'PXELinux', :snippet => false },
                                                                                        { :id => 2, :name => 'another template', :locked => false, :kind => 'PXEGrub', :snippet => true, :errors => { :name => 'has already been taken', :kind => "is invalid" }} ],
                                                           :ptables => [ { :id => 5,
-                                                                          :name => "somePtable",
+                                                                          :name => "datacenters",
+                                                                          :locked => false,
+                                                                          :kind => "",
+                                                                          :snippet => false
+                                                                        },
+                                                                        { :id => 6,
+                                                                          :name => "lvm",
+                                                                          :locked => true,
+                                                                          :kind => "",
+                                                                          :snippet => false
+                                                                        },
+                                                                        { :id => 7,
+                                                                          :name => "yours",
+                                                                          :locked => false,
+                                                                          :kind => "",
+                                                                          :snippet => true
+                                                                        },
+                                                                        { :id => 8,
+                                                                          :name => "mine",
                                                                           :locked => false,
                                                                           :kind => "",
                                                                           :snippet => false
