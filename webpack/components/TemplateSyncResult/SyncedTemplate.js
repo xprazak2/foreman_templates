@@ -4,47 +4,44 @@ import classNames from 'classnames';
 import { pick, mergeWith, isEmpty } from 'lodash';
 
 const StringInfoItem = ({ template, attr, tooltipText, translate = false }) => {
-    const string = translate ? __(template[attr]) : template[attr];
-    const child = (<strong> { string } </strong>);
-    return (<InfoItem itemId={itemIteratorId(template, attr)} child={child} tooltipText={tooltipText}/>);//infoItem(itemIteratorId(template, attr), child)
-  }
+    return (<InfoItem itemId={itemIteratorId(template, attr)}
+                      tooltipText={tooltipText}>
+              <strong>{ translate ? __(template[attr]) : template[attr] }</strong>
+            </InfoItem>);
+};
 
 const IconInfoItem = ({ template, attr, cssClassNames, tooltipText }) => {
-      const child = (<span className={cssClassNames} />);
-      return (<InfoItem itemId={itemIteratorId(template, attr)} child={child} tooltipText={tooltipText}/>);//infoItem(itemIteratorId(template, attr), child);
-    }
+  return (<InfoItem itemId={itemIteratorId(template, attr)}
+                    tooltipText={tooltipText}>
+            <span className={cssClassNames} />
+          </InfoItem>);
+};
 
 const EmptyInfoItem = (template, attr) => (
-      <InfoItem itemId={itemIteratorId(template, attr)} />
+  <InfoItem itemId={itemIteratorId(template, attr)} />
+);
+
+const InfoItem = ({ itemId, children, tooltipText }) => {
+  const overlay = (
+    <OverlayTrigger overlay={tooltipText ? (<Tooltip id={itemId}>{ tooltipText }</Tooltip>) : ''}
+                    placement="top"
+                    trigger={['hover', 'focus']}
+                    rootClose={false}
+                    >
+        { children }
+      </OverlayTrigger>
     )
+  return (
+    <ListView.InfoItem key={itemId} className='additional-info-wide'>
+      { tooltipText ? overlay : children }
+    </ListView.InfoItem>
+  );
+}
 
-const InfoItem = ({ itemId, child, tooltipText }) => {
-      const overlay = (
-        <OverlayTrigger overlay={tooltipText ? (<Tooltip id={itemId}>{ tooltipText }</Tooltip>) : ''}
-                          placement="top"
-                          trigger={['hover', 'focus']}
-                          rootClose={false}
-                          >
-            <span>{ child }</span>
-          </OverlayTrigger>
-        )
-      return (
-        <ListView.InfoItem key={itemId} className='additional-info-wide'>
-        { tooltipText ? overlay : (<span>{ child }</span>)}
-        </ListView.InfoItem>
-      );
-    }
-
- const itemIteratorId = (template, attr) => {
-      const id = `${template.name}-${attr}`;
-      return id;
-    }
+const itemIteratorId = (template, attr) =>
+  `${template.name}-${attr}`;
 
 class SyncedTemplate extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const { template } = this.props;
 
@@ -60,13 +57,26 @@ class SyncedTemplate extends React.Component {
 
         switch(attr) {
           case 'locked':
-            return (<IconInfoItem template={template} attr={attr} cssClassNames={'glyphicon glyphicon-lock'} tooltipText='Locked' key={key} />)//;iconInfoItem(template, attr, 'glyphicon glyphicon-lock');
+            return (<IconInfoItem template={template}
+                                  attr={attr}
+                                  cssClassNames={'glyphicon glyphicon-lock'}
+                                  tooltipText='Locked'
+                                  key={key} />)
           case 'snippet':
-            return (<IconInfoItem template={template} attr={attr} cssClassNames={'glyphicon glyphicon-scissors'} tooltipText={'Snippet'} key={key} />);//iconInfoItem(template, attr, 'glyphicon glyphicon-scissors');
+            return (<IconInfoItem template={template}
+                                  attr={attr}
+                                  cssClassNames={'glyphicon glyphicon-scissors'}
+                                  tooltipText={'Snippet'}
+                                  key={key} />);
           case 'class':
-            return (<StringInfoItem template={template} attr={attr} translate={true} key={key} />);//stringInfoItem({template, attr, true});
+            return (<StringInfoItem template={template}
+                                    attr={attr}
+                                    translate={true}
+                                    key={key} />);
           case 'kind':
-            return (<StringInfoItem template={template} attr={attr} key={key} />);//stringInfoItem(template, attr);
+            return (<StringInfoItem template={template}
+                                    attr={attr}
+                                    key={key} />);
         }
       });
     };
