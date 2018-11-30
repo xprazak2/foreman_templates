@@ -11,7 +11,6 @@ import './overrides.scss';
 class SyncResultList extends React.Component {
   constructor(props) {
     super(props)
-    console.log(props)
   }
 
   render() {
@@ -39,7 +38,7 @@ class SyncResultList extends React.Component {
           />
           { templatesPage(reorderedTemplates, pagination)
               .filter(filterPredicate(filterString))
-              .map((template) => <SyncedTemplate template={template} key={template.id}/>) }
+              .map((template) => <SyncedTemplate template={template} key={template.name}/>) }
         </ListView>
       </div>
     )

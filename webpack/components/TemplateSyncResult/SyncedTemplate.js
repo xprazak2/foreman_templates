@@ -1,19 +1,49 @@
 import React from 'react';
-import { ListView, Grid, Icon } from 'patternfly-react';
+import { ListView, Grid, Icon, OverlayTrigger, Tooltip } from 'patternfly-react';
 import classNames from 'classnames';
 import { pick, mergeWith, isEmpty } from 'lodash';
+
+const StringInfoItem = ({ template, attr, tooltipText, translate = false }) => {
+    const string = translate ? __(template[attr]) : template[attr];
+    const child = (<strong> { string } </strong>);
+    return (<InfoItem itemId={itemIteratorId(template, attr)} child={child} tooltipText={tooltipText}/>);//infoItem(itemIteratorId(template, attr), child)
+  }
+
+const IconInfoItem = ({ template, attr, cssClassNames, tooltipText }) => {
+      const child = (<span className={cssClassNames} />);
+      return (<InfoItem itemId={itemIteratorId(template, attr)} child={child} tooltipText={tooltipText}/>);//infoItem(itemIteratorId(template, attr), child);
+    }
+
+const EmptyInfoItem = (template, attr) => (
+      <InfoItem itemId={itemIteratorId(template, attr)} />
+    )
+
+const InfoItem = ({ itemId, child, tooltipText }) => {
+      const overlay = (
+        <OverlayTrigger overlay={tooltipText ? (<Tooltip id={itemId}>{ tooltipText }</Tooltip>) : ''}
+                          placement="top"
+                          trigger={['hover', 'focus']}
+                          rootClose={false}
+                          >
+            <span>{ child }</span>
+          </OverlayTrigger>
+        )
+      return (
+        <ListView.InfoItem key={itemId} className='additional-info-wide'>
+        { tooltipText ? overlay : (<span>{ child }</span>)}
+        </ListView.InfoItem>
+      );
+    }
+
+ const itemIteratorId = (template, attr) => {
+      const id = `${template.name}-${attr}`;
+      return id;
+    }
 
 class SyncedTemplate extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      expanded: false
-    }
   }
-
-  toggleExpand() {
-    this.setState({ expanded: !this.state.expanded });
-  };
 
   render() {
     const { template } = this.props;
@@ -21,51 +51,25 @@ class SyncedTemplate extends React.Component {
     const additionalInfo = (template) => {
       const infoAttrs = ['locked', 'snippet', 'class', 'kind'];
 
-      return infoAttrs.map((key) => {
-        if (!template[key]) {
-          return emptyInfoItem(template, key);
+      return infoAttrs.map((attr) => {
+        const key = itemIteratorId(template, attr)
+
+        if (!template[attr]) {
+          return (<EmptyInfoItem template={template} attr={attr} key={key}/>);
         }
 
-        switch(key) {
+        switch(attr) {
           case 'locked':
-            return iconInfoItem(template, key, 'glyphicon glyphicon-lock');
+            return (<IconInfoItem template={template} attr={attr} cssClassNames={'glyphicon glyphicon-lock'} tooltipText='Locked' key={key} />)//;iconInfoItem(template, attr, 'glyphicon glyphicon-lock');
           case 'snippet':
-            return iconInfoItem(template, key, 'glyphicon glyphicon-scissors');
+            return (<IconInfoItem template={template} attr={attr} cssClassNames={'glyphicon glyphicon-scissors'} tooltipText={'Snippet'} key={key} />);//iconInfoItem(template, attr, 'glyphicon glyphicon-scissors');
           case 'class':
-            return stringInfoItem(template, key, true);
+            return (<StringInfoItem template={template} attr={attr} translate={true} key={key} />);//stringInfoItem({template, attr, true});
           case 'kind':
-            return stringInfoItem(template, key);
+            return (<StringInfoItem template={template} attr={attr} key={key} />);//stringInfoItem(template, attr);
         }
       });
     };
-
-    const infoItemId = (template, key) => {
-      const id = `${template.id}-${key}`;
-      return id;
-    }
-
-    const stringInfoItem = (template, key, translate = false) => {
-      const string = translate ? __(template[key]) : template[key];
-      const child = (<strong> { string } </strong>);
-      return infoItem(infoItemId(template, key), child)
-    }
-
-    const iconInfoItem = (template, key, cssClassNames) => {
-      const child = (<span className={cssClassNames} />);
-      return infoItem(infoItemId(template, key), child);
-    }
-
-    const emptyInfoItem = (template, key) => (
-      infoItem(infoItemId(template, key), '')
-    )
-
-    const infoItem = (itemId, child) => {
-      return (
-        <ListView.InfoItem key={itemId} className='additional-info-wide'>
-          { child }
-        </ListView.InfoItem>
-      );
-    }
 
     const itemLeftContentIcon = template => {
       const iconName =  isEmpty(template.errors) ? 'ok' : 'error-circle-o';
@@ -75,7 +79,7 @@ class SyncedTemplate extends React.Component {
     const templateErrors = (template) => {
       if (template.errors) {
         const res = Object.keys(template.errors).map((key) => {
-          return (<li>{`${key} ${template.errors[key]}`}</li>)
+          return (<li key={itemIteratorId(template, key)}>{`${key} ${template.errors[key]}`}</li>)
         });
         return (<ul>{ res }</ul>);
       }
