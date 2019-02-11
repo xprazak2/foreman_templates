@@ -18,9 +18,14 @@ module Foreman
             [:metadata_export_mode]
           end
 
+          def prefixed_params(params)
+            params.map { |param| "template_sync_#{param}" }
+          end
+
           def template_params_filter(extra_params = [])
             Foreman::ParameterFilter.new(Hash).tap do |filter|
-              filter.permit filter_params_list.concat(extra_params)
+              params = filter_params_list.concat(extra_params)
+              filter.permit params.concat(prefixed_params params)
             end
           end
         end

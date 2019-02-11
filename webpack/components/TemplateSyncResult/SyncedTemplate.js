@@ -46,7 +46,7 @@ class SyncedTemplate extends React.Component {
     const { template } = this.props;
 
     const additionalInfo = (template) => {
-      const infoAttrs = ['locked', 'snippet', 'class', 'kind'];
+      const infoAttrs = ['locked', 'snippet', 'class_name', 'kind'];
 
       return infoAttrs.map((attr) => {
         const key = itemIteratorId(template, attr)
@@ -68,7 +68,7 @@ class SyncedTemplate extends React.Component {
                                   cssClassNames={'glyphicon glyphicon-scissors'}
                                   tooltipText={'Snippet'}
                                   key={key} />);
-          case 'class':
+          case 'class_name':
             return (<StringInfoItem template={template}
                                     attr={attr}
                                     translate={true}
@@ -81,15 +81,37 @@ class SyncedTemplate extends React.Component {
       });
     };
 
+    const aggregatedErrors = template => {
+      const err = { ...template.errors } || {};
+      if (template.additional_errors) {
+        err.additional = template.additional_errors
+      }
+
+      if (template.exception_message) {
+        err.exception = template.exception_message
+      }
+
+      return err;
+    }
+
     const itemLeftContentIcon = template => {
-      const iconName =  isEmpty(template.errors) ? 'ok' : 'error-circle-o';
+      const iconName =  isEmpty(aggregatedErrors(template)) ? 'ok' : 'error-circle-o';
       return (<Icon name={iconName} size="sm" type={'pf'} />);
     }
 
+    const formatError = (key, value) => {
+      const omitKeys = ['base', 'exception', 'additional'];
+      if (omitKeys.reduce((memo, item) => (memo || key === item), false)) {
+        return value;
+      }
+
+      return `${key}: ${value}`;
+    }
+
     const templateErrors = (template) => {
-      if (template.errors) {
-        const res = Object.keys(template.errors).map((key) => {
-          return (<li key={itemIteratorId(template, key)}>{`${key} ${template.errors[key]}`}</li>)
+      if (Object.keys(aggregatedErrors(template)).length !== 0) {
+        const res = Object.keys(aggregatedErrors(template)).map((key) => {
+          return (<li key={itemIteratorId(template, key)}>{ formatError(key, aggregatedErrors(template)[key]) }</li>)
         });
         return (<ul>{ res }</ul>);
       }

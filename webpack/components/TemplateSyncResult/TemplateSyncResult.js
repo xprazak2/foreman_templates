@@ -8,19 +8,38 @@ import FinishedSyncResult from './FinishedSyncResult';
 class TemplateSyncResult extends React.Component {
 
   render() {
-    const { resultList, history, filterString, syncedTemplatesPageChange } = this.props;
+    const {
+      resultList: {
+        templates,
+        resultAction,
+        warning,
+        error,
+        repo,
+        branch,
+        git_user,
+        pagination,
+      },
+      history,
+      filterString,
+      syncedTemplatesPageChange
+    } = this.props;
 
     const redirectBack = () => history.push({ pathname: '/template_syncs'});
 
     return (
       <div>
-        { isEmpty(resultList.templates) ?
+        { isEmpty(templates) ?
             <EmptySyncResult primaryAction={redirectBack}/> :
-            <FinishedSyncResult templates={resultList.templates}
-                                type={resultList.resultAction}
+            <FinishedSyncResult templates={templates}
+                                type={resultAction}
+                                globalWarning={warning}
+                                globalError={error}
+                                repo={repo}
+                                branch={branch}
+                                gitUser={git_user}
                                 redirectBack={redirectBack}
                                 filterString={filterString}
-                                pagination={resultList.pagination}
+                                pagination={pagination}
                                 pageChange={syncedTemplatesPageChange}/>
         }
       </div>

@@ -14,7 +14,7 @@ module ForemanTemplates
         :changed => changed?,
         :imported => @imported,
         :additional_errors => @additional_errors,
-        :exception => @exception ? @exception.message : nil,
+        :exception => exception_message,
         :validation_errors => errors.to_h,
         :file => @template_file,
         :type => @template.present? ? @template.class.name.underscore : nil
@@ -23,6 +23,10 @@ module ForemanTemplates
       # false comes as a string when using rake tasks
       res[:diff] = @diff if verbose && verbose != 'false'
       res
+    end
+
+    def exception_message
+      @exception ? @exception.message : nil
     end
 
     def errors

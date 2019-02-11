@@ -8,6 +8,18 @@ import Search from './Search';
 import ConnectedSearch from './ConnectedSearch';
 
 
+const processTemplates = (templates, type) => {
+  if (!type || type === 'import') {
+    console.log(templates);
+    return templates;
+  }
+
+  if (templates && type === 'export') {
+    console.log(templates);
+    return templates
+  }
+}
+
 const FinishedSyncResult = (props) => {
   const {
     templates,
@@ -17,6 +29,9 @@ const FinishedSyncResult = (props) => {
     pagination,
     pageChange
   } = props;
+
+  const processedTemplates = processTemplates(templates, type);
+
   return (
     <div>
       <Title titleText={`You tried to ${type} the following templates`} />

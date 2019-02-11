@@ -37,7 +37,8 @@ module ForemanTemplates
     end
 
     def git_repo?
-      @repo.start_with? self.class.git_repo_start_with
+      # @repo.start_with? self.class.git_repo_start_with
+      self.class.git_repo_start_with.any? { |prefix| @repo.start_with? prefix }
     end
 
     def get_absolute_repo_path
