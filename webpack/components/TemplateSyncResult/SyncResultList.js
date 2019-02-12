@@ -14,7 +14,7 @@ class SyncResultList extends React.Component {
   }
 
   render() {
-    const { filterString, pagination, pageChange, templates, expandable, globalStatus } = this.props;
+    const { filterString, pagination, pageChange, templates, expandable, exportStatus } = this.props;
 
     const filterPredicate = (filterString) => (template) => {
       return filterString ? template.name.match(filterString) : true;
@@ -35,7 +35,7 @@ class SyncResultList extends React.Component {
               .map((template) => <SyncedTemplate
                                   template={template}
                                   key={template.name}
-                                  globalStatus={globalStatus}
+                                  exportStatus={exportStatus}
                                   expandable={expandable}/>) }
         </ListView>
       </div>

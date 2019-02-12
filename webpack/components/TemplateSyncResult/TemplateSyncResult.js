@@ -16,7 +16,7 @@ class TemplateSyncResult extends React.Component {
         error,
         repo,
         branch,
-        git_user,
+        gitUser,
         pagination,
       },
       history,
@@ -26,9 +26,13 @@ class TemplateSyncResult extends React.Component {
 
     const redirectBack = () => history.push({ pathname: '/template_syncs'});
 
-    const createGlobalStatus = (error, warning) => {
+    const createExportStatus = (error, warning, resultAction) => {
+      if (resultAction !== 'export') {
+        return;
+      }
+
       if (error) {
-        return ({ type: 'error', msg: error });
+        return ({ type: 'danger', msg: error });
       }
 
       if (warning) {
@@ -42,10 +46,10 @@ class TemplateSyncResult extends React.Component {
             <EmptySyncResult primaryAction={redirectBack}/> :
             <FinishedSyncResult templates={templates}
                                 type={resultAction}
-                                globalStatus={createGlobalStatus(error, warning)}
+                                exportStatus={createExportStatus(error, warning, resultAction)}
                                 repo={repo}
                                 branch={branch}
-                                gitUser={git_user}
+                                gitUser={gitUser}
                                 redirectBack={redirectBack}
                                 filterString={filterString}
                                 pagination={pagination}

@@ -1,9 +1,13 @@
 import React from 'react';
 
-const Title = ({ titleText }) => (
-  <div className="form-group">
-    <h1>{ titleText }</h1>
-  </div>
-);
+const Title = ({ titleText, headingSize }) => {
+  const CustomTag = `h${headingSize}`;
+
+  return (
+    <div className="form-group">
+      <CustomTag>{ titleText }</CustomTag>
+    </div>
+  );
+}
 
 export default Title;

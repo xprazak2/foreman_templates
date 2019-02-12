@@ -19,19 +19,25 @@ module Foreman
           end
 
           def prefixed_params(params)
-            params.map { |param| "template_sync_#{param}" }
+            params.map { |param| "template_sync_#{param}".to_sym }
           end
 
           def template_params_filter(extra_params = [])
             Foreman::ParameterFilter.new(Hash).tap do |filter|
               params = filter_params_list.concat(extra_params)
-              filter.permit params.concat(prefixed_params params)
+              # final_params = params.concat(prefixed_params params)
+              # binding.pry
+              filter.permit params
             end
           end
         end
 
-        def template_import_params
-          add_taxonomy_params(self.class.template_params_filter(self.class.extra_import_params)
+        def ui_template_import_params
+          template_import_params [:syncType, :template_sync]
+        end
+
+        def template_import_params(additional_params = [])
+          add_taxonomy_params(self.class.template_params_filter(self.class.extra_import_params.concat additional_params)
             .filter_params(params, parameter_filter_context, :none).with_indifferent_access)
         end
 

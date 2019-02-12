@@ -3,6 +3,8 @@ import { ListView, Grid, Icon, OverlayTrigger, Tooltip } from 'patternfly-react'
 import classNames from 'classnames';
 import { pick, mergeWith, isEmpty } from 'lodash';
 
+import { pickIcon } from './TemplateSyncResultHelpers';
+
 const StringInfoItem = ({ template, attr, tooltipText, translate = false }) => {
     return (<InfoItem itemId={itemIteratorId(template, attr)}
                       tooltipText={tooltipText}>
@@ -43,7 +45,7 @@ const itemIteratorId = (template, attr) =>
 
 class SyncedTemplate extends React.Component {
   render() {
-    const { template, globalStatus, expandable } = this.props;
+    const { template, exportStatus, expandable } = this.props;
 
     const additionalInfo = (template) => {
       const infoAttrs = ['locked', 'snippet', 'class_name', 'kind'];
@@ -94,9 +96,11 @@ class SyncedTemplate extends React.Component {
       return err;
     }
 
-    const itemLeftContentIcon = (template, status) => {
-      
-      
+    const itemLeftContentIcon = (template, exportStatus) => {
+      if (exportStatus) {
+        return (<Icon name={pickIcon(exportStatus.type)} size="sm" type={'pf'} />)
+      }
+
       const iconName =  isEmpty(aggregatedErrors(template)) ? 'ok' : 'error-circle-o';
       return (<Icon name={iconName} size="sm" type={'pf'} />);
     }
@@ -126,11 +130,11 @@ class SyncedTemplate extends React.Component {
           heading={template.name}
           additionalInfo={additionalInfo(template)}
           className={'listViewItem--listItemVariants'}
-          leftContent={itemLeftContentIcon(template)}
+          leftContent={itemLeftContentIcon(template, exportStatus)}
           hideCloseIcon
           stacked
         >
-          { templateErrors(template) }
+          { !exportStatus && templateErrors(template) }
       </ListView.Item>
     );
   }

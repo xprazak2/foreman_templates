@@ -8,33 +8,36 @@ import Search from './Search';
 import ConnectedSearch from './ConnectedSearch';
 import InlineNotification from '../InlineNotification';
 
-const processTemplates = (templates, type) => {
-  if (!type || type === 'import') {
-    return templates;
-  }
-
-  if (templates && type === 'export') {
-    return templates.map
-  }
-}
+const ShowInlineNotification = props =>
+  props.exportStatus ?
+    (<InlineNotification alertType={props.exportStatus.type} content={props.exportStatus.msg} />) :
+    '';
 
 const FinishedSyncResult = (props) => {
   const {
     templates,
     type,
     redirectBack,
+    repo,
+    branch,
+    gitUser,
     filterString,
     pagination,
     pageChange,
-    globalStatus
+    exportStatus
   } = props;
 
-  const processedTemplates = processTemplates(templates, type);
+  const composeSubtitle = (repo, branch, gitUser) => {
+    const branchString = branch && ` and branch ${branch}` || '';
+    const userString = gitUser && ` as user ${gitUser}` || '';
+    return `using repo ${repo}${branchString}${userString}`;
+  }
 
   return (
     <div>
-      <Title titleText={`You tried to ${type} the following templates`} />
-
+      <Title titleText={`You tried to ${type} the following templates`} headingSize='1' />
+      <Title titleText={composeSubtitle(repo, branch, gitUser)} headingSize='4' />
+      <ShowInlineNotification exportStatus={exportStatus}/>
       <div className="row title-row">
         <ConnectedSearch className='col-md-6'/>
         <TitleActions>
@@ -42,7 +45,7 @@ const FinishedSyncResult = (props) => {
         </TitleActions>
       </div>
       <SyncResultList expandable={type === 'import'}
-                      globalStatus={globalStatus}
+                      exportStatus={exportStatus}
                       templates={templates}
                       filterString={filterString}
                       pagination={pagination}

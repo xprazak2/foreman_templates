@@ -7,7 +7,8 @@ module ForemanTemplates
     end
 
     def initialize(args = {})
-      super
+      super args
+      binding.pry
       @verbose = parse_bool(@verbose)
       @force = parse_bool(@force)
       @lock = parse_bool(@lock)
@@ -15,11 +16,11 @@ module ForemanTemplates
     end
 
     def import!
-      if git_repo?
-        import_from_git
-      else
-        import_from_files
-      end
+      # if git_repo?
+      #   import_from_git
+      # else
+      #   import_from_files
+      # end
     end
 
     def import_from_files

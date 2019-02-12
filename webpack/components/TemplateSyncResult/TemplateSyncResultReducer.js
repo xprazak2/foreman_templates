@@ -9,6 +9,7 @@ import { TEMPLATESYNC_FORM_SUBMITTED,
 const initialState = Immutable({
   resultAction: '',
   templates: [],
+
   pagination: {
     page: 1,
     perPage: 20
@@ -17,10 +18,18 @@ const initialState = Immutable({
 
 const syncResult = (state = initialState, action) => {
   const { payload } = action;
+  console.log(payload);
   switch(action.type) {
     case TEMPLATESYNC_FORM_SUBMITTED:
-      return state.set('resultAction', payload.data.result_action)
-                  .set('templates', payload.data.templates);
+      return state.merge({
+        'resultAction': payload.data.result_action,
+        'templates': payload.data.templates,
+        'repo': payload.data.repo,
+        'branch': payload.data.branch,
+        'gitUser': payload.data.git_user,
+        'error': payload.data.error,
+        'warning': payload.data.warning
+      })
     case SYNC_RESULT_PAGINATION_CHANGE:
       return state.set('pagination', payload.pagination);
     default:
