@@ -6,17 +6,15 @@ import TitleActions from '../layout/TitleActions';
 import Title from '../layout/Title';
 import Search from './Search';
 import ConnectedSearch from './ConnectedSearch';
-
+import InlineNotification from '../InlineNotification';
 
 const processTemplates = (templates, type) => {
   if (!type || type === 'import') {
-    console.log(templates);
     return templates;
   }
 
   if (templates && type === 'export') {
-    console.log(templates);
-    return templates
+    return templates.map
   }
 }
 
@@ -27,7 +25,8 @@ const FinishedSyncResult = (props) => {
     redirectBack,
     filterString,
     pagination,
-    pageChange
+    pageChange,
+    globalStatus
   } = props;
 
   const processedTemplates = processTemplates(templates, type);
@@ -35,13 +34,16 @@ const FinishedSyncResult = (props) => {
   return (
     <div>
       <Title titleText={`You tried to ${type} the following templates`} />
+
       <div className="row title-row">
         <ConnectedSearch className='col-md-6'/>
         <TitleActions>
           <Button onClick={redirectBack}>{ __('Back') }</Button>
         </TitleActions>
       </div>
-      <SyncResultList templates={templates}
+      <SyncResultList expandable={type === 'import'}
+                      globalStatus={globalStatus}
+                      templates={templates}
                       filterString={filterString}
                       pagination={pagination}
                       pageChange={pageChange}/>

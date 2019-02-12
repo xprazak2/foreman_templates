@@ -26,14 +26,23 @@ class TemplateSyncResult extends React.Component {
 
     const redirectBack = () => history.push({ pathname: '/template_syncs'});
 
+    const createGlobalStatus = (error, warning) => {
+      if (error) {
+        return ({ type: 'error', msg: error });
+      }
+
+      if (warning) {
+        return ({ type: 'warning', msg: warning });
+      }
+    }
+
     return (
       <div>
         { isEmpty(templates) ?
             <EmptySyncResult primaryAction={redirectBack}/> :
             <FinishedSyncResult templates={templates}
                                 type={resultAction}
-                                globalWarning={warning}
-                                globalError={error}
+                                globalStatus={createGlobalStatus(error, warning)}
                                 repo={repo}
                                 branch={branch}
                                 gitUser={git_user}

@@ -14,17 +14,11 @@ class SyncResultList extends React.Component {
   }
 
   render() {
-    const { filterString, pagination, pageChange, templates } = this.props;
-
-    const templateReorder = (templates) => {
-      return Object.values(templates).reduce((memo, item) => memo.concat(item), [])
-    }
+    const { filterString, pagination, pageChange, templates, expandable, globalStatus } = this.props;
 
     const filterPredicate = (filterString) => (template) => {
       return filterString ? template.name.match(filterString) : true;
     }
-
-    // const reorderedTemplates = templateReorder(this.props.templates)
 
     return (
       <div>
@@ -38,7 +32,11 @@ class SyncResultList extends React.Component {
           />
           { templatesPage(templates, pagination)
               .filter(filterPredicate(filterString))
-              .map((template) => <SyncedTemplate template={template} key={template.name}/>) }
+              .map((template) => <SyncedTemplate
+                                  template={template}
+                                  key={template.name}
+                                  globalStatus={globalStatus}
+                                  expandable={expandable}/>) }
         </ListView>
       </div>
     )

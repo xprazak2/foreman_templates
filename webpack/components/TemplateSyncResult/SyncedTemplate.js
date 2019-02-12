@@ -43,7 +43,7 @@ const itemIteratorId = (template, attr) =>
 
 class SyncedTemplate extends React.Component {
   render() {
-    const { template } = this.props;
+    const { template, globalStatus, expandable } = this.props;
 
     const additionalInfo = (template) => {
       const infoAttrs = ['locked', 'snippet', 'class_name', 'kind'];
@@ -94,7 +94,9 @@ class SyncedTemplate extends React.Component {
       return err;
     }
 
-    const itemLeftContentIcon = template => {
+    const itemLeftContentIcon = (template, status) => {
+      
+      
       const iconName =  isEmpty(aggregatedErrors(template)) ? 'ok' : 'error-circle-o';
       return (<Icon name={iconName} size="sm" type={'pf'} />);
     }
