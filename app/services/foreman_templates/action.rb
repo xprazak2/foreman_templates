@@ -46,8 +46,8 @@ module ForemanTemplates
     end
 
     def verify_path!(path)
-      msg = _("Using file-based synchronization, but couldn't access %s to export templates. ") % path
-      msg += _("Please check the access permissions/SELinux and make sure it is writable for the web application user account, typically 'foreman'.")
+      msg = _("Using file-based synchronization, but couldn't access %s. ") % path
+      msg += _("Please check the access permissions/SELinux and make sure it is readable/writable for the web application user account, typically 'foreman'.")
       raise msg unless Dir.exist?(path)
     end
 

@@ -48,6 +48,8 @@ class TemplateSyncForm extends React.Component {
             validationData,
             valid } = this.props;
 
+    console.log(this.props);
+
     const resetToDefault = curry((dispatch, change, formName, fieldName, value) => {
       dispatch(change(formName, fieldName, value));
     })(dispatch, change, formName);

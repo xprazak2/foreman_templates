@@ -6,7 +6,7 @@ import ConnectedSearch from './ConnectedSearch';
 import SyncedTemplate from './SyncedTemplate';
 import { templatesPage } from './TemplateSyncResultSelectors';
 
-import './overrides.scss';
+import './TemplateSyncResult.scss';
 
 class SyncResultList extends React.Component {
   constructor(props) {

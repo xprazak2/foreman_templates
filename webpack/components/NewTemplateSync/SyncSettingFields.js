@@ -32,9 +32,9 @@ const SyncSettingsFields = ({ importSettings, exportSettings, syncType, resetFie
   const addValidations = (validationData => settingsAry => {
     return settingsAry.map((setting) => {
       switch(setting.name) {
-        case 'template_sync_repo':
+        case 'repo':
           return setting.set('required', true)
-                        .set('validate', [repoFormat(validationData['template_sync_repo'])]);
+                        .set('validate', [repoFormat(validationData['repo'])]);
         default:
           return setting;
       }

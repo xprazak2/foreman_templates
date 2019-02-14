@@ -33,7 +33,7 @@ module Foreman
         end
 
         def ui_template_import_params
-          template_import_params [:syncType, :template_sync]
+          template_import_params [:template_sync]
         end
 
         def template_import_params(additional_params = [])
