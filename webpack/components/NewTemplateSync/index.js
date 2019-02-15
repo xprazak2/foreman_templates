@@ -8,8 +8,6 @@ import { newSyncState, mapImportSettings, mapExportSettings, selectLoadingSettin
 const mapStateToProps = state => ({
   loadingSettings: selectLoadingSettings(state),
   error: selectError(state)
-  // importSettings: mapImportSettings(state),
-  // exportSettings: mapExportSettings(state)
 });
 
 export default connect(mapStateToProps, TemplateSyncActions)(NewTemplateSync);

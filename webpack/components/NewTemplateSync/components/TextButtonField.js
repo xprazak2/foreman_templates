@@ -28,7 +28,7 @@ const renderField = ({
     touched={touched}
   >
     <InputGroup>
-      { fieldType(item, fieldSelector, input, disabled, blank) }
+      <FieldType item={item} fieldSelector={fieldSelector} input={input} disabled={disabled} blank={blank} />
       <InputGroup.Button>
         <Button onClick={buttonAction} disabled={disabled}>{ buttonText }</Button>
       </InputGroup.Button>
@@ -48,59 +48,56 @@ const TextButtonField = ({
   validate,
   disabled = false,
   fieldRequired = false
-}) => {
+}) => (
+  <Field name={name}
+         label={label}
+         type={fieldSelector(item)}
+         fieldSelector={fieldSelector}
+         component={renderField}
+         buttonAttrs={buttonAttrs}
+         blank={blank}
+         item={item}
+         disabled={disabled}
+         validate={item.validate}
+         fieldRequired={fieldRequired}>
+  </Field>
+);
 
-  return (
-    <Field name={name}
-           label={label}
-           type={fieldSelector(item)}
-           fieldSelector={fieldSelector}
-           component={renderField}
-           buttonAttrs={buttonAttrs}
-           blank={blank}
-           item={item}
-           disabled={disabled}
-           validate={item.validate}
-           fieldRequired={fieldRequired}>
-    </Field>
-  );
-}
-
-const fieldType = (item, fieldSelector, input, disabled, blank) => {
+const FieldType = ({ item, fieldSelector, input, disabled, blank }) => {
   if (!fieldSelector) {
-    return inputField;
+    return (<InputField input={input} disabled={disabled} />);
   }
 
   switch (fieldSelector(item)) {
     case "text":
-      return inputField(input, disabled);
+      return <InputField input={input} disabled={disabled} />;
     case "select":
-      return selectField(input, blank, item, disabled);
+      return <SelectField input={input} blank={blank} item={item} disabled={disabled} />;
     case "checkbox":
-      return checkboxField(input, item, disabled);
+      return <CheckboxField input={input} item={item} disabled={disabled} />;
     default:
-      throw new Error(`Unknown field type for ${item}`);
+      throw new Error(`Unknown field type ${fieldSelector(item)} for ${item}`);
   }
 }
 
-const inputField = (input, disabled) =>
+const InputField = ({ input, disabled }) =>
   <FormControl { ...input } type="text" disabled={disabled}></FormControl>
 
-const selectField = (input, blank, item, disabled) =>
+const SelectField = ({ input, blank, item, disabled }) =>
   <FormControl { ...input } componentClass="select" disabled={disabled}>
-    { addBlankOption(blank) }
+    <BlankOption blank={blank} />
     { item.selection.map((opt) => <option key={opt.value} value={opt.value}>{opt.label}</option>) }
   </FormControl>
 
-const checkboxField = (input, item, disabled) => {
+const CheckboxField = ({ input, item, disabled }) => {
   return <Checkbox { ...input } disabled={disabled}></Checkbox>
 }
 
-const addBlankOption = (blank) => {
+const BlankOption = ({ blank }) => {
   if (Object.keys(blank).length === 0) {
-    return;
+    return null;
   } else {
-    return <option key={opt.value} value={blank.value}>{blank.label}</option>;
+    return <option key={blank.value} value={blank.value}>{blank.label}</option>;
   }
 }
 

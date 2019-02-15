@@ -3,7 +3,6 @@ import { required } from 'redux-form-validators';
 import { memoize } from 'lodash';
 import SyncSettingField from './SyncSettingField';
 
-
 const repoFormat = memoize(formatAry => value => {
   const valid = formatAry.map((item) => value.startsWith(item))
                          .reduce((memo, item) => (item || memo), false)
@@ -15,10 +14,17 @@ const repoFormat = memoize(formatAry => value => {
   }
 });
 
-const SyncSettingsFields = ({ importSettings, exportSettings, syncType, resetField, disabled, validationData }) => {
+const SyncSettingsFields = ({
+  importSettings,
+  exportSettings,
+  syncType,
+  resetField,
+  disabled,
+  validationData
+}) => {
   const mapSettings = (settingsAry) =>
     (
-      <div>
+      <React.Fragment>
         { addValidations(settingsAry).map((setting, index) =>
           (<SyncSettingField setting={setting}
                              key={setting.name}
@@ -26,15 +32,14 @@ const SyncSettingsFields = ({ importSettings, exportSettings, syncType, resetFie
                              resetField={resetField}>
           </SyncSettingField>))
         }
-      </div>
+      </React.Fragment>
     )
 
   const addValidations = (validationData => settingsAry => {
     return settingsAry.map((setting) => {
       switch(setting.name) {
         case 'repo':
-          return setting.set('required', true)
-                        .set('validate', [repoFormat(validationData['repo'])]);
+          return setting.merge({ 'required': true, 'validate': [repoFormat(validationData['repo'])] })
         default:
           return setting;
       }
@@ -49,7 +54,7 @@ const SyncSettingsFields = ({ importSettings, exportSettings, syncType, resetFie
     return mapSettings(exportSettings);
   }
 
-  // TODO: Error msg
+  // TODO: Should never happen, take care of it on error response
   return(<div>No Settings found! This should never ever happen.</div>);
 }
 
