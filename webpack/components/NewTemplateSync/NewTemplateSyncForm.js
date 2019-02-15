@@ -72,9 +72,12 @@ class TemplateSyncForm extends React.Component {
   }
 }
 
-const prepareInitialValues = (importSettings, exportSettings) =>
-  importSettings.concat(exportSettings)
+const prepareInitialValues = (importSettings, exportSettings) => {
+  console.log(importSettings);
+  console.log(exportSettings)
+  return importSettings.concat(exportSettings)
                 .reduce((memo, item) => Object.assign(memo, { [item.name]: item.value }), {});
+}
 
 
 const mapStateToProps = (state, ownProps) => {
