@@ -1,16 +1,14 @@
 import React from 'react';
-import { reduxForm, formValueSelector, change } from 'redux-form';
-import { connect } from 'react-redux';
+import { change } from 'redux-form';
 
 import Form from 'foremanReact/components/common/forms/Form';
 import RadioButtonGroup from 'foremanReact/components/common/forms/RadioButtonGroup';
-import * as FormActions from 'foremanReact/redux/actions/common/forms';
 import TextField from 'foremanReact/components/common/forms/TextField';
 
-import SyncSettingsFields from './SyncSettingFields';
-import Title from '../../layout/Title';
+import SyncSettingsFields from '../SyncSettingFields';
+import Title from '../../../layout/Title';
 
-const formName = 'newTemplateSync';
+import { formName } from './NewTemplateSyncFormConstants';
 
 const submit = (values, dispatch, props) => {
   const { submitForm, syncType, importUrl, exportUrl, history } = props;
@@ -65,22 +63,4 @@ const TemplateSyncForm = ({
   );
 }
 
-const prepareInitialValues = (importSettings, exportSettings) =>
-  importSettings.concat(exportSettings)
-                .reduce((memo, item) => Object.assign(memo, { [item.name]: item.value }), {});
-
-const mapStateToProps = (state, ownProps) => {
-  const initSyncType = { syncType: "import" };
-  const syncType = formValueSelector(formName)(state, 'syncType');
-
-  const initialValues = prepareInitialValues(ownProps.importSettings, ownProps.exportSettings);
-
-  if (syncType) {
-    return ({ initialValues: { ...initialValues, syncType }, syncType });
-  } else {
-    return ({ initialValues: { ...initialValues, ...initSyncType }, ...initSyncType });
-  }
-}
-
-const form = reduxForm({ form: formName })(TemplateSyncForm);
-export default connect(mapStateToProps, FormActions)(form);
+export default TemplateSyncForm;

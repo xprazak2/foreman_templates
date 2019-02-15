@@ -1,7 +1,7 @@
 import React from 'react';
 import { LoadingState } from 'patternfly-react';
 
-import TemplateSyncForm from './components/NewTemplateSyncForm';
+import NewTemplateSyncForm from './components/NewTemplateSyncForm';
 
 class NewTemplateSync extends React.Component {
   componentDidMount() {
@@ -10,16 +10,14 @@ class NewTemplateSync extends React.Component {
   }
 
   render() {
-    const { apiUrls: { importUrl, exportUrl }, importSettings, exportSettings, loadingSettings, history, validationData } = this.props;
+    const { apiUrls: { importUrl, exportUrl }, loadingSettings, history, validationData } = this.props;
 
     return (
       <LoadingState loading={loadingSettings}>
-        <TemplateSyncForm importSettings={importSettings}
-                          exportSettings={exportSettings}
-                          validationData={validationData}
-                          importUrl={importUrl}
-                          exportUrl={exportUrl}
-                          history={history} />
+        <NewTemplateSyncForm validationData={validationData}
+                             importUrl={importUrl}
+                             exportUrl={exportUrl}
+                             history={history} />
       </LoadingState>
     );
   }
