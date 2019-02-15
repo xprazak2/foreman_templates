@@ -2,7 +2,7 @@ import React from 'react';
 import { FieldLevelHelp } from 'patternfly-react';
 
 import TextField from 'foremanReact/components/common/forms/TextField';
-import TextButtonField from '../layout/TextButtonField';
+import TextButtonField from './TextButtonField';
 
 const SyncSettingField = ({ setting, resetField, disabled }) => {
   const label = (setting) => (

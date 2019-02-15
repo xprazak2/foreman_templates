@@ -19,10 +19,13 @@ const syncSettings = (state = initialState, action) => {
     case SYNC_SETTINGS_REQUEST:
       return state.set('loadingSettings', true);
     case SYNC_SETTINGS_SUCCESS:
-      return state.set('loadingSettings', false)
-                  .set('importSettings', payload.results.import)
-                  .set('exportSettings', payload.results.export);
+      return state.merge({
+        'loadingSettings': false,
+        'importSettings': payload.results.import,
+        'exportSettings': payload.results.export
+      });
     case SYNC_SETTINGS_FAILURE:
+      // TODO handle this in UI by showing a pretty message
       return state.set({ error: payload.error}).set({ loadingSettings: false });
     default:
       return state;
