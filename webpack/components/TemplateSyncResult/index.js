@@ -5,8 +5,14 @@ import { bindActionCreators } from 'redux';
 import TemplateSyncResult from './TemplateSyncResult';
 import * as TemplateSyncResultActions from './TemplateSyncResultActions';
 
-const mapStateToProps = ({ foreman_templates: { syncResult } }) => {
-  return ({ resultList: syncResult.resultList, filterString: syncResult.connectedSearch.filterString });
+import { selectResultList } from './TemplateSyncResultSelectors';
+import { selectSearchFilterString } from './ConnectedSearch/ConnectedSearchSelectors';
+
+const mapStateToProps = state => {
+  return ({
+    resultList: selectResultList(state),
+    filterString: selectSearchFilterString(state)
+  });
 }
 
 export default connect(mapStateToProps, TemplateSyncResultActions)(TemplateSyncResult);

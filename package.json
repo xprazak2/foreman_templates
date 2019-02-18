@@ -21,8 +21,8 @@
   "homepage": "https://github.com/theforeman/foreman_templates",
   "dependencies": {
     "class-names": "^1.0.0",
-    "ramda": "^0.25.0",
     "react-router-dom": "^4.2.2",
-    "sortabular": "^1.5.1"
+    "patternfly": "^3.58.0",
+    "patternfly-react": "^2.25.4"
   }
 }

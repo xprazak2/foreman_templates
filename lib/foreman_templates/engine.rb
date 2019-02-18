@@ -40,7 +40,7 @@ module ForemanTemplates
              :url_hash => { :controller => :template_syncs, :action => :index },
              :caption => N_('Sync Templates'),
              :parent => :hosts_menu,
-             :before => :partition_tables,
+             :before => :ptables,
              :turbolinks => false
       end
     end
