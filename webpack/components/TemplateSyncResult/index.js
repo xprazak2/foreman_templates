@@ -6,7 +6,7 @@ import TemplateSyncResult from './TemplateSyncResult';
 import * as TemplateSyncResultActions from './TemplateSyncResultActions';
 
 import { selectResultList } from './TemplateSyncResultSelectors';
-import { selectSearchFilterString } from './ConnectedSearch/ConnectedSearchSelectors';
+import { selectSearchFilterString } from './components/ConnectedSearch/ConnectedSearchSelectors';
 
 const mapStateToProps = state => {
   return ({

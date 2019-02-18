@@ -3,6 +3,8 @@ import { LoadingState } from 'patternfly-react';
 
 import NewTemplateSyncForm from './components/NewTemplateSyncForm';
 
+import './NewTemplateSync.scss';
+
 class NewTemplateSync extends React.Component {
   componentDidMount() {
     const { apiUrls: { syncSettingsUrl }, getSyncSettings } = this.props;

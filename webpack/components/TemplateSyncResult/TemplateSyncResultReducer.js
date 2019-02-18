@@ -1,7 +1,7 @@
 import Immutable from 'seamless-immutable';
 import { combineReducers } from 'redux';
 
-import connectedSearch from './ConnectedSearch/ConnectedSearchReducer';
+import connectedSearch from './components/ConnectedSearch/ConnectedSearchReducer';
 
 import { TEMPLATESYNC_FORM_SUBMITTED,
          SYNC_RESULT_PAGINATION_CHANGE } from '../../consts';

@@ -1,4 +1,4 @@
-import { selectSyncResult } from '../TemplateSyncResultSelectors';
+import { selectSyncResult } from '../../TemplateSyncResultSelectors';
 
 export const selectSearch = state => selectSyncResult(state).connectedSearch;
 
