@@ -19,6 +19,7 @@ const submit = (formValues, dispatch, props) => {
     }
     return memo;
   }, {});
+
   return submitForm({ url, values: postValues, message: `Templates were ${syncType}ed.`, item: 'TemplateSync' }).then(
     (args) => {
       history.replace({ pathname: '/template_syncs/result' })
@@ -55,7 +56,14 @@ const TemplateSyncForm = ({
   return (
     <div>
       <Title titleText="Import or Export Templates" />
-      <Form onSubmit={handleSubmit(submit)} disabled={submitting || !valid} submitting={submitting} error={error} onCancel={redirectToResult(history)}>
+      <Form
+        onSubmit={handleSubmit(submit)}
+        disabled={submitting || (!valid && !error)}
+        submitting={submitting}
+        error={error}
+        onCancel={redirectToResult(history)}
+        errorTitle={error && error.severity === 'danger' ? __('Error') : __('Warning')}>
+
         <RadioButtonGroup name="syncType" controlLabel="Action type" radios={radioButtons(syncType)} disabled={submitting}></RadioButtonGroup>
         <SyncSettingsFields importSettings={importSettings}
                             exportSettings={exportSettings}

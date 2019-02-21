@@ -3,6 +3,10 @@ require 'ostruct'
 class TemplateSyncsController < ApplicationController
   include ::Foreman::Controller::Parameters::TemplateParams
 
+  rescue_from ::ForemanTemplates::PathAccessException do |error|
+    render_errors [error.message]
+  end
+
   def index
   end
 
@@ -18,6 +22,13 @@ class TemplateSyncsController < ApplicationController
 
   def export
     @result = ForemanTemplates::TemplateExporter.new(ui_template_export_params).export!
+    if @result.error
+      render_errors [@result.error]
+    end
+
+    if @result.warning
+      render_errors [@result.warning], 'warning'
+    end
   end
 
   def action_permission
@@ -31,5 +42,9 @@ class TemplateSyncsController < ApplicationController
 
   def parameter_filter_context
     Foreman::ParameterFilter::Context.new(:api, controller_name, params[:action])
+  end
+
+  def render_errors(messages, severity = 'danger')
+    render :json => { :error => { :errors => { :base => messages }, :severity => severity } }, :status => 422
   end
 end
