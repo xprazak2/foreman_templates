@@ -62,7 +62,7 @@ const TemplateSyncForm = ({
         submitting={submitting}
         error={error}
         onCancel={redirectToResult(history)}
-        errorTitle={error && error.severity === 'danger' ? __('Error') : __('Warning')}>
+        errorTitle={error && error.severity === 'danger' ? __('Error! ') : __('Warning! ')}>
 
         <RadioButtonGroup name="syncType" controlLabel="Action type" radios={radioButtons(syncType)} disabled={submitting}></RadioButtonGroup>
         <SyncSettingsFields importSettings={importSettings}
