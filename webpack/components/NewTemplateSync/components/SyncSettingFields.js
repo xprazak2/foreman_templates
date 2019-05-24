@@ -23,9 +23,20 @@ const SyncSettingsFields = ({
   disabled,
   validationData,
 }) => {
-  const mapSettings = settingsAry => (
+  const addValidationToSetting = (setting, validationData) => (
+    setting.name === 'repo' ?
+      setting.merge({
+        required: true,
+        validate: [repoFormat(validationData.repo)],
+      }) :
+      setting
+  );
+
+  const settingsAry = 'import' ? importSettings : exportSettings;
+
+  return (
     <React.Fragment>
-      {addValidations(settingsAry).map((setting, index) => (
+      { settingsAry.map(setting => addValidationToSetting(setting, validationData)).map((setting) => (
         <SyncSettingField
           setting={setting}
           key={setting.name}
@@ -34,24 +45,7 @@ const SyncSettingsFields = ({
         />
       ))}
     </React.Fragment>
-  );
-
-  const addValidations = (validationDataObj => settingsAry =>
-    settingsAry.map(setting => {
-      switch (setting.name) {
-        case 'repo':
-          return setting.merge({
-            required: true,
-            validate: [repoFormat(validationDataObj.repo)],
-          });
-        default:
-          return setting;
-      }
-    }))(validationData);
-
-  return syncType === 'import'
-    ? mapSettings(importSettings)
-    : mapSettings(exportSettings);
+  )
 };
 
 SyncSettingsFields.propTypes = {
