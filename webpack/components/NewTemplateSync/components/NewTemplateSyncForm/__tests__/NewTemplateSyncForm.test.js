@@ -1,10 +1,12 @@
 import { testComponentSnapshotsWithFixtures } from 'react-redux-test-utils';
+import Immutable from 'seamless-immutable';
 
 import NewTemplateSyncForm from '../NewTemplateSyncForm';
 
 import {
   importSettings,
   exportSettings,
+  initialValues,
 } from '../../../__fixtures__/templateSyncSettings.fixtures';
 
 const noop = () => {};
@@ -12,15 +14,19 @@ const noop = () => {};
 const commonFixture = {
   importUrl: '/import',
   exportUrl: '/export',
-  validationData: {},
+  validationData: {
+    repo: ['http://', 'ssh://'],
+  },
   userPermissions: {
     import: true,
     export: true,
   },
   handleSubmit: noop,
   valid: true,
-  importSettings,
-  exportSettings,
+  importSettings: Immutable(importSettings),
+  exportSettings: Immutable(exportSettings),
+  initialValues,
+  submitForm: () => {},
 };
 
 const fixtures = {

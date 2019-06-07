@@ -1,11 +1,116 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`NewTemplateSyncForm should render for export settings 1`] = `
-<Form
-  disabled={false}
-  errorTitle="Warning! "
+<ForemanForm
+  initialValues={
+    Object {
+      "export": Object {
+        "filter": "",
+        "negate": false,
+        "repo": "https://github.com/theforeman/community-templates.git",
+      },
+      "import": Object {
+        "associate": "new",
+        "force": false,
+      },
+    }
+  }
   onCancel={[Function]}
-  submitting={false}
+  onSubmit={[Function]}
+  validationSchema={
+    ObjectSchema {
+      "_blacklist": RefSet {
+        "list": Array [],
+        "refs": Array [],
+      },
+      "_conditions": Array [],
+      "_defaultDefault": [Function],
+      "_deps": Array [],
+      "_excludedEdges": Array [],
+      "_exclusive": Object {},
+      "_mutate": undefined,
+      "_nodes": Array [
+        "export",
+      ],
+      "_options": Object {
+        "abortEarly": true,
+        "recursive": true,
+      },
+      "_type": "object",
+      "_typeError": [Function],
+      "_whitelist": RefSet {
+        "list": Array [],
+        "refs": Array [],
+      },
+      "fields": Object {
+        "export": ObjectSchema {
+          "_blacklist": RefSet {
+            "list": Array [],
+            "refs": Array [],
+          },
+          "_conditions": Array [],
+          "_defaultDefault": [Function],
+          "_deps": Array [],
+          "_excludedEdges": Array [],
+          "_exclusive": Object {},
+          "_mutate": undefined,
+          "_nodes": Array [
+            "repo",
+          ],
+          "_options": Object {
+            "abortEarly": true,
+            "recursive": true,
+          },
+          "_type": "object",
+          "_typeError": [Function],
+          "_whitelist": RefSet {
+            "list": Array [],
+            "refs": Array [],
+          },
+          "fields": Object {
+            "repo": StringSchema {
+              "_blacklist": RefSet {
+                "list": Array [],
+                "refs": Array [],
+              },
+              "_conditions": Array [],
+              "_deps": Array [],
+              "_exclusive": Object {
+                "repo-format": false,
+                "required": true,
+              },
+              "_mutate": undefined,
+              "_options": Object {
+                "abortEarly": true,
+                "recursive": true,
+              },
+              "_type": "string",
+              "_typeError": [Function],
+              "_whitelist": RefSet {
+                "list": Array [],
+                "refs": Array [],
+              },
+              "tests": Array [
+                [Function],
+                [Function],
+              ],
+              "transforms": Array [
+                [Function],
+              ],
+            },
+          },
+          "tests": Array [],
+          "transforms": Array [
+            [Function],
+          ],
+        },
+      },
+      "tests": Array [],
+      "transforms": Array [
+        [Function],
+      ],
+    }
+  }
 >
   <SyncTypeRadios
     controlLabel="Action type"
@@ -24,7 +129,6 @@ exports[`NewTemplateSyncForm should render for export settings 1`] = `
     }
   />
   <SyncSettingsFields
-    disabled={false}
     exportSettings={
       Array [
         Object {
@@ -50,6 +154,7 @@ exports[`NewTemplateSyncForm should render for export settings 1`] = `
         },
       ]
     }
+    formProps={Object {}}
     importSettings={
       Array [
         Object {
@@ -84,17 +189,88 @@ exports[`NewTemplateSyncForm should render for export settings 1`] = `
     }
     resetField={[Function]}
     syncType="export"
-    validationData={Object {}}
   />
-</Form>
+</ForemanForm>
 `;
 
 exports[`NewTemplateSyncForm should render when for import settings 1`] = `
-<Form
-  disabled={false}
-  errorTitle="Warning! "
+<ForemanForm
+  initialValues={
+    Object {
+      "export": Object {
+        "filter": "",
+        "negate": false,
+        "repo": "https://github.com/theforeman/community-templates.git",
+      },
+      "import": Object {
+        "associate": "new",
+        "force": false,
+      },
+    }
+  }
   onCancel={[Function]}
-  submitting={false}
+  onSubmit={[Function]}
+  validationSchema={
+    ObjectSchema {
+      "_blacklist": RefSet {
+        "list": Array [],
+        "refs": Array [],
+      },
+      "_conditions": Array [],
+      "_defaultDefault": [Function],
+      "_deps": Array [],
+      "_excludedEdges": Array [],
+      "_exclusive": Object {},
+      "_mutate": undefined,
+      "_nodes": Array [
+        "import",
+      ],
+      "_options": Object {
+        "abortEarly": true,
+        "recursive": true,
+      },
+      "_type": "object",
+      "_typeError": [Function],
+      "_whitelist": RefSet {
+        "list": Array [],
+        "refs": Array [],
+      },
+      "fields": Object {
+        "import": ObjectSchema {
+          "_blacklist": RefSet {
+            "list": Array [],
+            "refs": Array [],
+          },
+          "_conditions": Array [],
+          "_defaultDefault": [Function],
+          "_deps": Array [],
+          "_excludedEdges": Array [],
+          "_exclusive": Object {},
+          "_mutate": undefined,
+          "_nodes": Array [],
+          "_options": Object {
+            "abortEarly": true,
+            "recursive": true,
+          },
+          "_type": "object",
+          "_typeError": [Function],
+          "_whitelist": RefSet {
+            "list": Array [],
+            "refs": Array [],
+          },
+          "fields": Object {},
+          "tests": Array [],
+          "transforms": Array [
+            [Function],
+          ],
+        },
+      },
+      "tests": Array [],
+      "transforms": Array [
+        [Function],
+      ],
+    }
+  }
 >
   <SyncTypeRadios
     controlLabel="Action type"
@@ -120,7 +296,6 @@ exports[`NewTemplateSyncForm should render when for import settings 1`] = `
     }
   />
   <SyncSettingsFields
-    disabled={false}
     exportSettings={
       Array [
         Object {
@@ -146,6 +321,7 @@ exports[`NewTemplateSyncForm should render when for import settings 1`] = `
         },
       ]
     }
+    formProps={Object {}}
     importSettings={
       Array [
         Object {
@@ -180,7 +356,6 @@ exports[`NewTemplateSyncForm should render when for import settings 1`] = `
     }
     resetField={[Function]}
     syncType="import"
-    validationData={Object {}}
   />
-</Form>
+</ForemanForm>
 `;
