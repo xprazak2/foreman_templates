@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import TextButtonField from './TextButtonField';
 import ButtonTooltip from './ButtonTooltip';
 
-const SyncSettingField = ({ setting, resetField, disabled }) => {
+const SyncSettingField = ({ setting, resetField, disabled, syncType }) => {
   const label = settingObj => `${settingObj.fullName} `;
 
   const fieldSelector = settingObj => {
@@ -25,20 +25,14 @@ const SyncSettingField = ({ setting, resetField, disabled }) => {
     return 'text';
   };
 
-  const handleReset = (settingName, settingValue) => {
-    resetField(settingName, settingValue);
-  };
-
   return (
     <TextButtonField
-      name={setting.name}
+      name={`${syncType}.${setting.name}`}
       label={label(setting)}
       blank={{}}
       item={setting}
-      buttonAttrs={{
-        buttonText: <ButtonTooltip tooltipId={setting.name} />,
-        buttonAction: () => handleReset(setting.name, setting.value),
-      }}
+      buttonText={<ButtonTooltip tooltipId={setting.name} />}
+      buttonAction={resetField(`${syncType}.${setting.name}`, setting.value)}
       fieldSelector={fieldSelector}
       disabled={disabled}
       fieldRequired={setting.required}

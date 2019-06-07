@@ -22,18 +22,15 @@ const mapStateToProps = (state, ownProps) => {
 
   const initialFormValues = selectInitialFormValues(state);
 
-  const currentFields = selectRegisteredFields(formName, state);
-
   return {
     initialValues: { ...initialFormValues },
     importSettings,
     exportSettings,
-    currentFields,
   };
 };
 
-const form = reduxForm({ form: formName })(NewTemplateSyncForm);
 export default connect(
   mapStateToProps,
   FormActions
-)(form);
+)(NewTemplateSyncForm);
+

@@ -1,33 +1,13 @@
 import React from 'react';
-import { change } from 'redux-form';
 import PropTypes from 'prop-types';
+import { get } from 'lodash';
 
 import Form from 'foremanReact/components/common/forms/Form';
+import { Formik } from 'formik';
 
 import SyncSettingsFields from '../SyncSettingFields';
 import SyncTypeRadios from '../SyncTypeRadios';
 import { formName } from './NewTemplateSyncFormConstants';
-
-const submit = syncType => (formValues, dispatch, props) => {
-  const { submitForm, importUrl, exportUrl, history, currentFields } = props;
-  const url = syncType === 'import' ? importUrl : exportUrl;
-  const currentFieldNames = Object.keys(currentFields);
-  const postValues = Object.keys(formValues).reduce((memo, key) => {
-    if (currentFieldNames.includes(key)) {
-      memo[key] = formValues[key];
-    }
-    return memo;
-  }, {});
-
-  return submitForm({
-    url,
-    values: postValues,
-    message: `Templates were ${syncType}ed.`,
-    item: 'TemplateSync',
-  }).then(args => {
-    history.replace({ pathname: '/template_syncs/result' });
-  });
-};
 
 const redirectToResult = history => () =>
   history.push({ pathname: '/template_syncs/result' });
@@ -73,48 +53,73 @@ class NewTemplateSyncForm extends React.Component {
     const {
       submitting,
       error,
-      handleSubmit,
+      submitForm,
       importSettings,
       exportSettings,
-      dispatch,
       history,
       validationData,
       valid,
+      importUrl,
+      exportUrl,
+      initialValues,
     } = this.props;
 
-    const resetToDefault = ((dispatchFn, changeFn, nameOfForm) => (
-      fieldName,
-      value
-    ) => {
-      dispatchFn(changeFn(nameOfForm, fieldName, value));
-    })(dispatch, change, formName);
+    const resetToDefault = (fieldName, fieldValue) => resetFn => {
+      return resetFn(fieldName, fieldValue);
+    };
 
     return (
-      <Form
-        onSubmit={handleSubmit(submit(this.state.syncType))}
-        disabled={submitting || (!valid && !error)}
-        submitting={submitting}
-        error={error}
-        onCancel={redirectToResult(history)}
-        errorTitle={
-          error && error.severity === 'danger' ? __('Error! ') : __('Warning! ')
-        }
-      >
-        <SyncTypeRadios
-          name="syncType"
-          controlLabel="Action type"
-          radios={this.initRadioButtons(this.state.syncType)}
-          disabled={submitting}
-        />
-        <SyncSettingsFields
-          importSettings={importSettings}
-          exportSettings={exportSettings}
-          syncType={this.state.syncType}
-          resetField={resetToDefault}
-          disabled={submitting}
-          validationData={validationData}
-        />
-      </Form>
+      <Formik
+        onSubmit={(values, actions) => {
+          const url = this.state.syncType === 'import' ? importUrl : exportUrl;
+          return submitForm({
+            url,
+            values: values[this.state.syncType],
+            message: `Templates were ${this.state.syncType}ed.`,
+            item: 'TemplateSync',
+          })
+          .then(args => {
+            history.replace({ pathname: '/template_syncs/result' });
+          }).catch(exception => {
+            actions.setSubmitting(false);
+            actions.setErrors(Object.keys(exception.errors).reduce((memo, key) => {
+              const errorMessages = exception.errors[key]
+              memo[key] = errorMessages ? errorMessages.join(', ') : errorMessages;
+              return memo;
+            }, {}));
+          });
+        }}
+        initialValues={initialValues}
+        >
+
+        {(formProps) => (
+          <Form
+            onSubmit={formProps.handleSubmit}
+            disabled={formProps.isSubmitting || (!formProps.isValid && !error)}
+            submitting={formProps.isSubmitting}
+            error={error}
+            onCancel={redirectToResult(history)}
+            errorTitle={
+              error && error.severity === 'danger' ? __('Error! ') : __('Warning! ')
+            }
+          >
+            <SyncTypeRadios
+              name="syncType"
+              controlLabel="Action type"
+              radios={this.initRadioButtons(this.state.syncType)}
+              disabled={formProps.isSubmitting}
+            />
+            <SyncSettingsFields
+              importSettings={importSettings}
+              exportSettings={exportSettings}
+              syncType={this.state.syncType}
+              resetField={resetToDefault}
+              disabled={submitting}
+              validationData={validationData}
+            />
+          </Form>
+        )}
+      </Formik>
     );
   }
 }
