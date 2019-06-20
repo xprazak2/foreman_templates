@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { get } from 'lodash';
 
 import Form from 'foremanReact/components/common/forms/Form';
+import ForemanForm from 'foremanReact/components/common/forms/ForemanForm';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import SyncSettingsFields from '../SyncSettingFields';
@@ -43,9 +44,6 @@ const syncFormSchema = (syncType, settingsObj, validationData) => {
     [syncType]: Yup.object().shape(schema)
   });
 }
-
-const isInitialValid = ({ validationSchema, initialValues }) =>
-  validationSchema ? true : validationSchema.isValidSync(initialValues);
 
 class NewTemplateSyncForm extends React.Component {
   allowedSyncType = (userPermissions, radioAttrs) =>
@@ -104,7 +102,7 @@ class NewTemplateSyncForm extends React.Component {
     };
 
     return (
-      <Formik
+      <ForemanForm
         onSubmit={(values, actions) => {
           const url = this.state.syncType === 'import' ? importUrl : exportUrl;
           return submitForm({
@@ -115,62 +113,25 @@ class NewTemplateSyncForm extends React.Component {
           })
           .then(args => {
             history.replace({ pathname: '/template_syncs/result' });
-          }).catch(exception => {
-            actions.setSubmitting(false);
-            actions.setErrors(Object.keys(exception.errors).reduce((memo, key) => {
-              const errorMessages = exception.errors[key]
-              memo[key] = errorMessages ? errorMessages.join(', ') : errorMessages;
-              return memo;
-            }, {}));
-          });
+          })
         }}
         initialValues={initialValues}
         validationSchema={syncFormSchema(this.state.syncType, { import: importSettings, export: exportSettings }, validationData)}
-        isInitialValid={isInitialValid}
-        >
-
-        {(formProps) => (
-          <React.Fragment>
-          <Form
-            onSubmit={formProps.handleSubmit}
-            disabled={formProps.isSubmitting || (!formProps.isValid && !error)}
-            submitting={formProps.isSubmitting}
-            error={error}
-            onCancel={redirectToResult(history)}
-            errorTitle={
-              error && error.severity === 'danger' ? __('Error! ') : __('Warning! ')
-            }
-          >
-            <SyncTypeRadios
-              name="syncType"
-              controlLabel="Action type"
-              radios={this.initRadioButtons(this.state.syncType)}
-              disabled={formProps.isSubmitting}
-            />
-            <SyncSettingsFields
-              importSettings={importSettings}
-              exportSettings={exportSettings}
-              syncType={this.state.syncType}
-              resetField={resetToDefault}
-              disabled={submitting}
-             />
-          </Form>
-                       <div style={{ margin: '1rem 0' }}>
-              <h3 style={{ fontFamily: 'monospace' }} />
-            <pre
-              style={{
-                background: '#f6f8fa',
-                fontSize: '1rem',
-                padding: '.5rem',
-              }}
-            >
-              {JSON.stringify(formProps, null, 2)}
-            </pre>
-            </div>
-            </React.Fragment>
-
-        )}
-      </Formik>
+        onCancel={redirectToResult(history)}
+        error={error}
+      >
+        <SyncTypeRadios
+          name="syncType"
+          controlLabel="Action type"
+          radios={this.initRadioButtons(this.state.syncType)}
+        />
+        <SyncSettingsFields
+          importSettings={importSettings}
+          exportSettings={exportSettings}
+          syncType={this.state.syncType}
+          resetField={resetToDefault}
+         />
+      </ForemanForm>
     );
   }
 }

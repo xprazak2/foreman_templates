@@ -5,14 +5,17 @@ import PropTypes from 'prop-types';
 
 import CommonForm from 'foremanReact/components/common/forms/CommonForm';
 
-const SyncTypeRadios = ({
-  controlLabel,
+const SyncTypeRadios = (props) => {
+  const { controlLabel,
   radios,
   name,
   className = '',
   inputClassName = 'col-md-6',
-  disabled = false,
-}) => (
+  disabled = false } = props;
+
+  console.log(props);
+
+  return (
   <CommonForm
     label={controlLabel}
     className={className}
@@ -33,7 +36,7 @@ const SyncTypeRadios = ({
     ))}
   </CommonForm>
 );
-
+}
 SyncTypeRadios.propTypes = {
   controlLabel: PropTypes.string.isRequired,
   radios: PropTypes.array.isRequired,
