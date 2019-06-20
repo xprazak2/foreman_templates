@@ -4,13 +4,48 @@ import { get } from 'lodash';
 
 import Form from 'foremanReact/components/common/forms/Form';
 import { Formik } from 'formik';
-
+import * as Yup from 'yup';
 import SyncSettingsFields from '../SyncSettingFields';
 import SyncTypeRadios from '../SyncTypeRadios';
-import { formName } from './NewTemplateSyncFormConstants';
+// import { formName } from './NewTemplateSyncFormConstants';
 
 const redirectToResult = history => () =>
   history.push({ pathname: '/template_syncs/result' });
+
+const repoFormat = formatAry => value => {
+  if (value === undefined) {
+    return true;
+  }
+
+  const valid = formatAry
+    .map(item => (value).startsWith(item))
+    .reduce((memo, item) => item || memo, false);
+
+  return value && valid;
+};
+
+const syncFormSchema = (syncType, settingsObj, validationData) => {
+  const schema = (settingsObj[syncType].asMutable() || []).reduce((memo, setting) => {
+    if (setting.name === 'repo') {
+      return {
+        ...memo,
+        repo: Yup.string().test(
+          'repo-format',
+          `Invalid repo format, must start with one of: ${validationData.repo.join(', ')}`,
+          repoFormat(validationData.repo))
+        .required("can't be blank")
+      }
+    }
+    return memo
+  }, {});
+
+  return Yup.object().shape({
+    [syncType]: Yup.object().shape(schema)
+  });
+}
+
+const isInitialValid = ({ validationSchema, initialValues }) =>
+  validationSchema ? true : validationSchema.isValidSync(initialValues);
 
 class NewTemplateSyncForm extends React.Component {
   allowedSyncType = (userPermissions, radioAttrs) =>
@@ -90,9 +125,12 @@ class NewTemplateSyncForm extends React.Component {
           });
         }}
         initialValues={initialValues}
+        validationSchema={syncFormSchema(this.state.syncType, { import: importSettings, export: exportSettings }, validationData)}
+        isInitialValid={isInitialValid}
         >
 
         {(formProps) => (
+          <React.Fragment>
           <Form
             onSubmit={formProps.handleSubmit}
             disabled={formProps.isSubmitting || (!formProps.isValid && !error)}
@@ -115,9 +153,22 @@ class NewTemplateSyncForm extends React.Component {
               syncType={this.state.syncType}
               resetField={resetToDefault}
               disabled={submitting}
-              validationData={validationData}
-            />
+             />
           </Form>
+                       <div style={{ margin: '1rem 0' }}>
+              <h3 style={{ fontFamily: 'monospace' }} />
+            <pre
+              style={{
+                background: '#f6f8fa',
+                fontSize: '1rem',
+                padding: '.5rem',
+              }}
+            >
+              {JSON.stringify(formProps, null, 2)}
+            </pre>
+            </div>
+            </React.Fragment>
+
         )}
       </Formik>
     );

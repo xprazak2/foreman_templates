@@ -36,7 +36,6 @@ const SyncSettingField = ({ setting, resetField, disabled, syncType }) => {
       fieldSelector={fieldSelector}
       disabled={disabled}
       fieldRequired={setting.required}
-      validate={setting.validate}
       tooltipHelp={<FieldLevelHelp content={setting.description} />}
     >
       {setting.value}

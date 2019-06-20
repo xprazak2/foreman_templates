@@ -15,14 +15,12 @@ const TextButtonField = ({
   buttonText,
   buttonAction,
   fieldSelector,
-  validate,
   disabled,
   fieldRequired,
   tooltipHelp,
 }) => (
   <FormikField
     name={name}
-    validate={item.validate}
     render={({ field, form }) => (
       <RenderField
         label={label}
