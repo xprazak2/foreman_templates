@@ -26,6 +26,8 @@ module ForemanTemplates
 
         apipie_documented_controllers ["#{ForemanTemplates::Engine.root}/app/controllers/api/v2/*.rb"]
 
+        register_global_js_file 'routes'
+
         security_block :templates do
           permission :import_templates, {
             :"api/v2/template" => [:import],

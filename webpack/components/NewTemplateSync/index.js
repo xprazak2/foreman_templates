@@ -7,9 +7,16 @@ import { selectLoadingSettings, selectError } from './NewTemplateSyncSelectors';
 import { withProtectedView } from '../../helpers';
 import PermissionDenied from '../PermissionDenied';
 
+const viewProps = {
+  apiUrls: { importUrl: '/ui_template_syncs/import', exportUrl: '/ui_template_syncs/export ', syncSettingsUrl: '/ui_template_syncs/sync_settings' },
+  validationData: { repo: []},
+  userPermissions: { import: true, export: true }
+}
+
 const mapStateToProps = state => ({
   loadingSettings: selectLoadingSettings(state),
   error: selectError(state),
+  ...viewProps
 });
 
 const permissionList = (
