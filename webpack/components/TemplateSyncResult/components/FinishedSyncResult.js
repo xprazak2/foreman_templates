@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { capitalize } from 'lodash';
 
 import PageLayout from 'foremanReact/routes/common/PageLayout/PageLayout';
-import { LinkContainer } from 'react-router-bootstrap';
+import { Link } from 'react-router-dom';
 
 import { Button } from 'patternfly-react';
 import SyncResultList from './SyncResultList';
@@ -40,9 +40,9 @@ const FinishedSyncResult = ({
       <div className="title-filter col-md-4">&nbsp;</div>
       <div id="title_action" className="col-md-8">
         <div className="btn-toolbar pull-right">
-          <LinkContainer to="/template_syncs" activeClassName="">
+          <Link to="/template_syncs">
             <Button>{__('Back to sync form')}</Button>
-          </LinkContainer>
+          </Link>
         </div>
       </div>
     </div>
