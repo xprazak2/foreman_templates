@@ -6,7 +6,7 @@ import InfoItem from './InfoItem';
 import { itemIteratorId } from './helpers';
 
 const IconInfoItem = ({ template, attr, iconName, tooltipText }) => (
-  <InfoItem itemId={itemIteratorId(template, attr)} tooltipText={tooltipText}>
+  <InfoItem itemId={itemIteratorId(template.templateFile, attr)} tooltipText={tooltipText}>
     <Icon type="fa" name={iconName} />
   </InfoItem>
 );
