@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { compose } from 'redux';
 
 import ForemanForm from 'foremanReact/components/common/forms/ForemanForm';
 import * as Yup from 'yup';
@@ -96,7 +97,19 @@ class NewTemplateSyncForm extends React.Component {
       importUrl,
       exportUrl,
       initialValues,
+      currentLocation,
+      currentOrganization,
     } = this.props;
+
+    const addTaxParams = (key, currentTax) => params => {
+      if (currentTax.id) {
+        params[key] = [currentTax.id]
+      }
+      return params;
+    }
+
+    const addOrgParams = addTaxParams('organization_ids', currentOrganization);
+    const addLocParams = addTaxParams('location_ids', currentLocation);
 
     const resetToDefault = (fieldName, fieldValue) => resetFn =>
       resetFn(fieldName, fieldValue);
@@ -107,7 +120,7 @@ class NewTemplateSyncForm extends React.Component {
           const url = this.state.syncType === 'import' ? importUrl : exportUrl;
           return submitForm({
             url,
-            values: values[this.state.syncType],
+            values: compose(addLocParams, addOrgParams)(values[this.state.syncType]),
             message: `Templates were ${this.state.syncType}ed.`,
             item: 'TemplateSync',
           }).then(args => {
