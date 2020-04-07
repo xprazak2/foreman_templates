@@ -123,7 +123,7 @@ class NewTemplateSyncForm extends React.Component {
             values: compose(
               addLocParams,
               addOrgParams
-            )(values[this.state.syncType]),
+            )({ ...values[this.state.syncType] }),
             message: `Templates were ${this.state.syncType}ed.`,
             item: 'TemplateSync',
           }).then(args => {
